@@ -86,6 +86,10 @@
   h6 {
     font-family: var(--font-heading);
     color: rgb(var(--color-text));
+
+    @variant dark {
+      color: rgb(var(--color-dark-text));
+    }
   }
 
   p {
