@@ -1,26 +1,230 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Manrope:wght@200..800&family=Space+Grotesk:wght@300..700&display=swap');
 @import "tailwindcss";
+@import "../components/StaggeredMenu/StaggeredMenu.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@custom-variant dark (&:where(.dark, .dark *));
+/* -------------------
+   LIGHT MODE THEME
+------------------- */
+@theme {
+  /* Backgrounds */
+  --color-bg: 249 250 251;       /* #F9FAFB */
+  --color-surface: 255 255 255;  /* #FFFFFF */
+  /* --color-dark-bg: 10 10 15;    #0A0A0F */
+  /* --color-dark-surface: 18 18 26; #12121A */
+  --color-dark-bg: 3, 7, 18;    /* #030712 */
+  --color-dark-surface: 16, 24, 40; /* #101828 */
+
+
+  /* Borders */
+  --color-border: 229 231 235;   /* #E5E7EB */
+  --color-dark-border: 39 39 42; /* #27272A */
+
+  /* Text */
+  --color-text: 15 15 20;        /* #0F0F14 */
+  --color-muted: 107 114 128;    /* #6B7280 */
+  --color-dark-text: 255 255 255; /* #FFFFFF */
+  --color-dark-muted: 200 201 209;  /* #C8C9D1 */
+
+  /* Brand / Accent */
+  --color-primary: 99 102 241;   /* #6366F1 */
+  --color-secondary: 168 85 247; /* #A855F7 */
+  --color-accent: 6 214 160;     /* #06D6A0 */
+
+  /* Gradient Stops */
+  --gradient-start: 129 140 248;  /* #818CF8 */
+  --gradient-middle: 192 132 252; /* #C084FC */
+  --gradient-end: 52 245 198;     /* #34F5C6 */
+  --gradient-start-dark: 99 102 241; 
+  --gradient-middle-dark: 168 85 247;
+  --gradient-end-dark: 6 214 160;
+
+  /* Fonts */
+  --font-heading: "Space Grotesk", Manrope, sans-serif;
+  --font-body: "Inter", sans-serif;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+/* -------------------
+   DARK MODE THEME
+------------------- */
+/* @theme dark { */
+    /* --color-bg: 10 10 15;          #0A0A0F */
+    /* --color-surface: 18 18 26;     #12121A */
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    /* --color-text: 255 255 255;     #FFFFFF */
+    /* --color-muted: 200 201 209;    #C8C9D1 */
+/* 
+    --color-primary: 99 102 241;
+    --color-secondary: 168 85 247;
+    --color-accent: 6 214 160;
+
+    --gradient-start: 99 102 241;
+    --gradient-middle: 168 85 247;
+    --gradient-end: 6 214 160;
+} */
+
+/* -------------------
+   BASE
+------------------- */
+@layer base {
+  body {
+    font-family: var(--font-body);
+    background-color: rgb(var(--color-bg));
+    color: rgb(var(--color-text));
+    /* transition: background-color 2.5s linear, color 0.5s ease; */
+    @variant dark {
+      background-color: rgb(var(--color-dark-bg));
+      color: rgb(var(--color-dark-text));
+    }
+  }
+
+  h1,h2,h3,h4,h5,h6 {
+    font-family: var(--font-heading);
+    color: rgb(var(--color-text));
+  }
+
+  p {
+    font-family: var(--font-body);
+    color: rgb(var(--color-text));
+    @variant dark {
+      color: rgb(var(--color-dark-text));
+    }
+  }
+
+  a {
+    color: rgb(var(--color-primary));
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+
+  a:hover {
+    color: rgb(var(--color-secondary));
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* -------------------
+   COMPONENTS
+------------------- */
+@layer components {
+  .card {
+    @apply rounded-2xl shadow-lg p-6 transition-all;
+    background-color: rgb(var(--color-surface));
+    color: rgb(var(--color-text));
+  }
+
+  .btn-primary {
+    @apply px-6 py-3 rounded-lg font-heading text-white transition-all;
+    background: linear-gradient(
+      135deg,
+      rgb(var(--gradient-start)),
+      rgb(var(--gradient-middle)),
+      rgb(var(--gradient-end))
+    );
+  }
+
+  .btn-primary:hover {
+    filter: brightness(1.1);
+  }
+
+  .gradient-blob {
+    @apply absolute rounded-full pointer-events-none;
+    background: linear-gradient(
+      135deg,
+      rgb(var(--gradient-start)),
+      rgb(var(--gradient-middle)),
+      rgb(var(--gradient-end))
+    );
+    transform: translate(-50%, -50%);
+    @variant dark {
+      background: linear-gradient(
+        135deg,
+        rgb(var(--gradient-start-dark)),
+        rgb(var(--gradient-middle-dark)),
+        rgb(var(--gradient-end-dark))
+      );
+    }
+  }
+
+  .pattern-grid {
+    background-color: white;
+    background-image:
+      linear-gradient(to right, rgba(0,0,0,0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(0,0,0,0.05) 1px, transparent 1px);
+    background-size: 24px 24px;
+
+    @variant dark {
+      background-color: rgb(var(--color-dark-bg));
+      background-image:
+        linear-gradient(to right, rgba(255,255,255,0.06) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255,255,255,0.06) 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+  }
+
+  .pattern-dotted {
+    background-color: var(--color-bg);
+    background-image:
+      radial-gradient(circle at 1px 1px, rgba(0,0,0,0.2) 1px, transparent 0);
+    background-size: 18px 18px;
+
+    @variant dark {
+      background-color: rgb(var(--color-dark-bg));
+      background-image:
+        radial-gradient(circle at 1px 1px, rgba(255,255,255,0.1) 1px, transparent 0);
+      background-size: 18px 18px;
+    }
+  }
+
+}
+
+/* -------------------
+   UTILITIES
+------------------- */
+@layer utilities {
+  .bg-primary { background-color: rgb(var(--color-primary)) !important; }
+  .bg-secondary { background-color: rgb(var(--color-secondary)) !important; }
+  .bg-accent { background-color: rgb(var(--color-accent)) !important; }
+
+  .text-primary { color: rgb(var(--color-primary)) !important; }
+  .text-secondary { color: rgb(var(--color-secondary)) !important; }
+  .text-accent { color: rgb(var(--color-accent)) !important; }
+
+  .gradient-brand {
+    background: linear-gradient(
+      135deg,
+      rgb(var(--gradient-start)),
+      rgb(var(--gradient-middle)),
+      rgb(var(--gradient-end))
+    );
+  }
+}
+
+@utility bg-pf-surface {
+  background-color: rgb(var(--color-surface)) !important;
+  @variant dark {
+     background-color: rgb(var(--color-dark-surface)) !important;
+  }
+}
+
+@utility text-pf-text {
+  color: rgb(var(--color-text)) !important;
+  @variant dark {
+    color: rgb(var(--color-dark-text)) !important;
+  }
+}
+
+/* Header Nav */
+.staggered-menu-wrapper.fixed-wrapper  {
+  @apply px-4 sm:px-6 lg:px-8;
+}
+
+.staggered-menu-header {
+  @apply bg-pf-surface;
+}
+
+.staggered-menu-panel {
+  @apply bg-pf-surface;
+}
+.staggered-menu-panel .sm-panel-itemLabel:not(:hover) {
+  @apply text-pf-text;
 }
