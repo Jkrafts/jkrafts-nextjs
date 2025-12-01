@@ -1,14 +1,11 @@
 'use client';
 
 import { useLayoutEffect, useRef } from "react";
-import gsap from "gsap"
-import ScrollTrigger from "gsap/src/ScrollTrigger";
+import { gsap } from "@/lib/gsap";
 
 import StaggeredMenu from "./StaggeredMenu";
 
 const Navbar = () => {
-
-  gsap.registerPlugin(ScrollTrigger);
 
   const navRef = useRef<HTMLDivElement>(null);
 

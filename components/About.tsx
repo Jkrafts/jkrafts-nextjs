@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from "react";
-import { gsap } from "gsap";
+import { gsap } from "@/lib/gsap";
 
 const skills = ["Next.js", "Nuxt.js", "React", "Vue", "GSAP", "Tailwind CSS", "WebGL"];
 

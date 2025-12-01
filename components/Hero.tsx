@@ -2,7 +2,7 @@
 
 import AnimatedBlob from "./AnimatedBlob";
 import { useEffect, useRef } from "react";
-import { gsap } from "gsap";
+import { gsap } from "@/lib/gsap";
 
 export default function Hero() {
   const headlineRef = useRef<HTMLHeadingElement>(null);

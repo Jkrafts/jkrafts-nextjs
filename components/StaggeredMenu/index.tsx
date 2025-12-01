@@ -1,7 +1,7 @@
 'use client';
 
 import React, { forwardRef, useCallback, useLayoutEffect, useRef, useState } from 'react';
-import { gsap } from 'gsap';
+import { gsap } from '@/lib/gsap';
 import Image from 'next/image';
 
 import DarkModeToggle from '../DarkModeToggle';
