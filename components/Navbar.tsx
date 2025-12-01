@@ -10,58 +10,62 @@ const Navbar = () => {
   const navRef = useRef<HTMLDivElement>(null);
 
   useLayoutEffect(() => {
-    const nav = navRef.current;
-    if (!nav) return;
 
-    const header = nav.querySelector('.staggered-menu-header') as HTMLElement;
-    if (!header) return;
+    const ctx = gsap.context(() => { 
 
-    // Ensure the border exists but starts transparent
-    nav.style.border = "0px solid";
-    nav.style.borderColor = "transparent";
-    nav.style.boxSizing = "border-box";
+      const nav = navRef.current;
+      if (!nav) return;
 
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: nav,
-        start: "top top",
-        end: "+=100",
-        scrub: true,
-      },
-      onStart: () => console.log('Navbar animation started'),
-    });
+      const header = nav.querySelector('.staggered-menu-header') as HTMLElement;
+      if (!header) return;
 
-    // Shrink the header & container
-    tl.to(nav, {
-      height: "50px",
-      padding: "0 1rem",
-      width: "90%",
-      top: "32px",
-      left: "50%",
-      x: "-50%",
-      borderWidth: "1px",
-      borderRadius: "8px",
-      ease: "power1.out",
-    }, 0);
+      // Ensure the border exists but starts transparent
+      nav.style.border = "0px solid";
+      nav.style.borderColor = "transparent";
+      nav.style.boxSizing = "border-box";
 
-    tl.to(header, {
-      padding: "0.6em",
-      ease: "power1.out",
-    }, 0);
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: nav,
+          start: "top top",
+          end: "+=100",
+          scrub: true,
+        },
+        onStart: () => console.log('Navbar animation started'),
+      });
 
-    // Animate border color only near the end
-    tl.to(nav, {
-      borderColor: "#000", // visible color
-      duration: 0.1,       // very short fade-in
-      ease: "none",
-      onComplete: () => nav.classList.add('shadow-lg'),
-      onReverseComplete: () => nav.classList.remove('shadow-lg')
-    }, 0.70); // start at 95% of the timeline
+      
+      // Shrink the header & container
+      tl.to(nav, {
+        height: "50px",
+        padding: "0 1rem",
+        width: "90%",
+        top: "32px",
+        left: "50%",
+        x: "-50%",
+        borderWidth: "1px",
+        borderRadius: "8px",
+        ease: "power1.out",
+      }, 0);
 
-    return () => {
-      tl.scrollTrigger?.kill();
-      tl.kill();
-    };
+      tl.to(header, {
+        padding: "0.6em",
+        ease: "power1.out",
+      }, 0);
+
+      // Animate border color only near the end
+      tl.to(nav, {
+        borderColor: "#000", // visible color
+        duration: 0.1,       // very short fade-in
+        ease: "none",
+        onComplete: () => nav.classList.add('shadow-lg'),
+        onReverseComplete: () => nav.classList.remove('shadow-lg')
+      }, 0.70); // start at 95% of the timeline
+
+    }, navRef);
+
+    return () => ctx.revert()
+    
   }, []);
 
   const menuItems = [
