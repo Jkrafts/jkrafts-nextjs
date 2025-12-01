@@ -1,0 +1,74 @@
+:root {
+  --card-1: #b2b2b2;
+  --card-2: #ce2017;
+  --card-3: #2f2f2f;
+}
+
+.scroll-flip {
+  font-family: "Instrument Serif", sans-serif;
+  @apply lg:relative lg:w-full h-max lg:h-svh py-16 px-8 lg:p-8 flex flex-col lg:flex-row lg:justify-center lg:items-center;
+}
+
+.scroll-flip img {
+  @apply lg:w-full lg:h-full lg:object-cover;
+}
+
+.scroll-flip .sticky-header {
+  @apply relative lg:absolute top-0 lg:top-1/5 left-0 lg:left-1/2 transform-none lg:transform lg:-translate-x-1/2 lg:-translate-y-1/5 mb-16 lg:mb-0;
+}
+
+.scroll-flip .sticky-header h2 {
+  @apply text-3xl md:text-4xl lg:text-6xl font-medium mb-4 opacity-100 lg:relative lg:text-center lg:will-change-[transform,opacity] lg:transform lg:translate-y-10 lg:opacity-0;
+}
+
+.scroll-flip p {
+  @apply text-base md:text-lg lg:text-xl font-medium;
+}
+
+.scroll-flip .scroll-flip-cards-container {
+  @apply w-full lg:w-3/4 gap-8 lg:gap-0 flex flex-col lg:flex-row lg:relative lg:perspective-[1000px] lg:will-change-[width] lg:transform lg:translate-y-10;
+}
+
+.scroll-flip .scroll-flip-card {
+  @apply w-full lg:w-auto max-w-[400px] lg:max-w-none mx-auto relative lg:mx-0 rounded-[20px] lg:rounded-none flex-1 aspect-5/7 lg:transform-3d lg:origin-top;
+}
+
+.scroll-flip #flip-card-1 {
+  @apply lg:rounded-[20px_0_0_20px];
+}
+
+.scroll-flip #flip-card-3 {
+  @apply lg:rounded-[0_20px_20px_0];
+}
+
+.scroll-flip #flip-card-3,
+.scroll-flip #flip-card-3,
+.scroll-flip #flip-card-3,
+.scroll-flip .scroll-flip-card-back {
+  @apply transform-none lg:transform;
+}
+
+.scroll-flip .scroll-flip-card-front,
+.scroll-flip .scroll-flip-card-back {
+  @apply absolute w-full h-full lg:backface-hidden rounded-[inherit] overflow-hidden;
+}
+
+.scroll-flip .scroll-flip-card-back {
+  @apply flex items-center justify-center text-center lg:rotate-y-180 p-8;
+}
+
+.scroll-flip .scroll-flip-card-back span{
+  @apply absolute top-8 left-8 lg:opacity-40;
+}
+
+.scroll-flip #flip-card-1 .scroll-flip-card-back {
+  background-color: var(--card-1);
+}
+
+.scroll-flip #flip-card-2 .scroll-flip-card-back {
+  background-color: var(--card-2);
+}
+
+.scroll-flip #flip-card-3 .scroll-flip-card-back {
+  background-color: var(--card-3);
+}
