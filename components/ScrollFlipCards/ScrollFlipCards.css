@@ -26,7 +26,7 @@
 }
 
 .scroll-flip .scroll-flip-cards-container {
-  @apply w-full lg:w-3/4 gap-8 lg:gap-0 flex flex-col lg:flex-row lg:relative lg:perspective-[1000px] lg:will-change-[width] lg:transform lg:translate-y-10;
+  @apply w-full lg:w-3/4 gap-8 lg:gap-0 flex flex-col lg:flex-row lg:relative lg:perspective-[1000px] lg:will-change-[width,margin] lg:transform lg:translate-y-10;
 }
 
 .scroll-flip .scroll-flip-card {

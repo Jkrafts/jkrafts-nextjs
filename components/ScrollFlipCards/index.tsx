@@ -85,9 +85,11 @@ const ScrollFlipCards: React.FC = () => {
             if (progress <= 0.25) {
               const widthPercentage = gsap.utils.mapRange(0, 0.25, 75, 60, progress);
 
-              gsap.set(cardContainer, {width: `${widthPercentage}%`, marginTop: '0px'});
+              gsap.set(cardContainer, {width: `${widthPercentage}%`})
+              gsap.to(cardContainer, {marginTop: '0px', duration: 0.5, ease: "power2.out"});
             } else {
-              gsap.set(cardContainer, {width: `60%`, marginTop: '200px'});
+              gsap.set(cardContainer, {width: `60%`});
+              gsap.to(cardContainer, {marginTop: '120px', duration: 0.5, ease: "power2.out"});
             }
 
             // GAP OPENING
