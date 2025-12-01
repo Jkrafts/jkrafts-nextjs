@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import ThemeProvider from "@/src/theme-provider";
 import Navbar from "@/components/Navbar";
+import { LenisProvider } from "@/providers/LenisProvider";
 
 export const metadata: Metadata = {
   title: "Jkrafts",
@@ -23,8 +24,10 @@ export default function RootLayout({
           enableSystem={false}
           disableTransitionOnChange
         >
-          <Navbar />
-          {children}
+          <LenisProvider>
+            <Navbar />
+            {children}
+          </LenisProvider>
           
         </ThemeProvider>
       </body>
