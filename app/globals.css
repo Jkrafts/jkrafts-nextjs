@@ -42,6 +42,8 @@
   /* Fonts */
   --font-heading: "Space Grotesk", Manrope, sans-serif;
   --font-body: "Inter", sans-serif;
+  --font-instrument: "Instrument Serif", serif;
+  --font-manrope: "Manrope", sans-serif;
 }
 
 /* -------------------
@@ -71,7 +73,7 @@
     font-family: var(--font-body);
     background-color: rgb(var(--color-bg));
     color: rgb(var(--color-text));
-    /* transition: background-color 2.5s linear, color 0.5s ease; */
+    transition: background-color 0.8s linear, color 0.8s ease;
     @variant dark {
       background-color: rgb(var(--color-dark-bg));
       color: rgb(var(--color-dark-text));
@@ -158,11 +160,12 @@
     background-color: white;
     background-image: linear-gradient(
         to right,
-        rgba(0, 0, 0, 0.05) 1px,
+        rgba(0, 0, 0, 0.06) 1px,
         transparent 1px
       ),
-      linear-gradient(to bottom, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
+      linear-gradient(to bottom, rgba(0, 0, 0, 0.06) 1px, transparent 1px);
     background-size: 24px 24px;
+    background-attachment: fixed;
 
     @variant dark {
       background-color: rgb(var(--color-dark-bg));
@@ -188,6 +191,7 @@
       transparent 0
     );
     background-size: 18px 18px;
+    background-attachment: fixed;
 
     @variant dark {
       background-color: rgb(var(--color-dark-bg));
