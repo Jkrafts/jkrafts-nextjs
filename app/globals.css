@@ -1,7 +1,19 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Manrope:wght@200..800&family=Space+Grotesk:wght@300..700&display=swap&family=Instrument+Serif:ital@0;1&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Manrope:wght@200..800&family=Space+Grotesk:wght@300..700&display=swap");
 @import "tailwindcss";
 @import "../components/StaggeredMenu/StaggeredMenu.css";
 @import "../components/ScrollFlipCards/ScrollFlipCards.css";
+
+:root{
+  --footer-height: 0px;
+}
+html[data-layout='snap'],
+html[data-layout='snap'] body {
+  height: 100%;
+  overflow: hidden;
+  /* height: calc(100vh - var(--footer-height)); */
+  /* overflow-y: auto;
+  scroll-snap-type: y mandatory; */
+}
 
 @custom-variant dark (&:where(.dark, .dark *));
 /* -------------------
@@ -40,10 +52,10 @@
   --gradient-end-dark: 6 214 160;
 
   /* Fonts */
-  --font-heading: "Space Grotesk", Manrope, sans-serif;
-  --font-body: "Inter", sans-serif;
-  --font-instrument: "Instrument Serif", serif;
-  --font-manrope: "Manrope", sans-serif;
+  --font-heading: var(--font-space-grotesk);
+  --font-body: var(--font-inter);
+  --font-instrument: var(--font-instrument-serif);
+  --font-manrope: var(--font-manrope);
 }
 
 /* -------------------
@@ -117,6 +129,24 @@
    COMPONENTS
 ------------------- */
 @layer components {
+  .padded-fit {
+    @apply mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .bg-base {
+    background-color: white;
+    @variant dark {
+      background-color: rgb(var(--color-dark-bg));
+    }
+  }
+
+  .svg-base {
+    color: rgb(var(--color-text));
+    @variant dark {
+      color: rgb(var(--color-dark-text));
+    }
+  }
+
   .card {
     @apply rounded-2xl shadow-lg p-6 transition-all;
     background-color: rgb(var(--color-surface));
@@ -245,6 +275,12 @@
     background-color: rgb(var(--color-dark-surface)) !important;
   }
 }
+@utility bg-pf-icon-surface {
+  @apply bg-gray-400/25;
+  @variant dark {
+    background-color: rgb(var(--color-dark-surface)) !important;
+  }
+}
 
 @utility text-pf-text {
   color: rgb(var(--color-text)) !important;
@@ -258,13 +294,54 @@
   @apply px-4 sm:px-6 lg:px-8;
 }
 
-.staggered-menu-header {
-  @apply bg-pf-surface;
-}
+/* .staggered-menu-header {
+  @apply bg-pf-surface; 
+} 
+*/
 
 .staggered-menu-panel {
   @apply bg-pf-surface;
 }
 .staggered-menu-panel .sm-panel-itemLabel:not(:hover) {
   @apply text-pf-text;
+}
+
+/* Contact Form */
+#contact ::placeholder {
+  @apply text-text;
+}
+
+/* About Page */
+
+.snap-root {
+  height: calc(100vh - var(--footer-height));
+  overflow-y: auto;
+  scroll-snap-type: y mandatory;
+}
+
+main#about section {
+  min-height: 100%;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+.snap-footer {
+  min-height: auto;
+  scroll-snap-align: end;
+}
+
+
+/* Projects Page */
+.swiper-button-disabled {
+  visibility: hidden;
+  cursor: not-allowed;
+  color: gray !important;
+  transition: visibility 200ms ease-in-out;
+}
+
+.swiper-projects-scrollbar .swiper-scrollbar-drag{
+  background-color: rgba(0, 0, 0, 0.5) !important;
+  @variant dark {
+    background-color: rgba(255, 255, 255, 0.5) !important;
+  }
 }
