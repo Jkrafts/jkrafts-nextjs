@@ -5,18 +5,15 @@ import type { ReactNode } from 'react';
 import { useLenis } from '@/providers/LenisProvider';
 import './ScrollStack.css';
 
-export interface ScrollStackItemProps {
+export interface ScrollStackItemProps extends React.HTMLAttributes<HTMLDivElement>{
   itemClassName?: string;
   children: ReactNode;
 }
 
-export const ScrollStackItem: React.FC<ScrollStackItemProps> = ({ children, itemClassName = '' }) => (
+export const ScrollStackItem: React.FC<ScrollStackItemProps> = ({ children, itemClassName = '', ...props }) => (
   <div
     className={`scroll-stack-card ${itemClassName}`.trim()}
-    style={{
-      backfaceVisibility: 'hidden',
-      transformStyle: 'preserve-3d'
-    }}
+    {...props}
   >
     {children}
   </div>
@@ -36,6 +33,10 @@ interface ScrollStackProps {
   blurAmount?: number;
   useWindowScroll?: boolean;
   onStackComplete?: () => void;
+  onStackMetrics?: (metrics: {
+    start: number;
+    end: number;
+  }) => void;
 }
 
 const ScrollStack: React.FC<ScrollStackProps> = ({
@@ -50,7 +51,8 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
   rotationAmount = 0,
   blurAmount = 0,
   useWindowScroll = true,
-  onStackComplete
+  onStackComplete,
+  onStackMetrics
 }) => {
   const scrollerRef = useRef<HTMLDivElement>(null);
   const cardsRef = useRef<HTMLElement[]>([]);
@@ -91,11 +93,33 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
     initialCardOffsetsRef.current = cards.map(card => getElementOffset(card));
 
     const endEl = useWindowScroll
-      ? (document.querySelector('.scroll-stack-end') as HTMLElement | null)
-      : scrollerRef.current?.querySelector('.scroll-stack-end') ?? null;
+      ? (document.querySelector<HTMLElement>('.scroll-stack-end') as HTMLElement | null)
+      : scrollerRef.current?.querySelector<HTMLElement>('.scroll-stack-end') ?? null;
 
     initialEndOffsetRef.current = endEl ? getElementOffset(endEl) : 0;
-  }, [getElementOffset, useWindowScroll]);
+
+     const containerHeight = useWindowScroll
+    ? window.innerHeight
+    : scrollerRef.current?.clientHeight ?? 0;
+
+  const stackPositionPx = parsePercentage(stackPosition, containerHeight);
+  const scaleEndPositionPx = parsePercentage(scaleEndPosition, containerHeight);
+
+  const firstCardTop = initialCardOffsetsRef.current[0];
+  const lastCardTop =
+    initialCardOffsetsRef.current[cards.length - 1];
+
+  // const start = firstCardTop - stackPositionPx;
+
+  const headerHeight =
+  document.querySelector<HTMLElement>('h2#featured-projects-header')?.offsetHeight ?? 0;
+
+  const start = firstCardTop - stackPositionPx - headerHeight;
+
+  const end = lastCardTop - scaleEndPositionPx;
+
+  onStackMetrics?.({ start, end });
+  }, [getElementOffset, useWindowScroll,parsePercentage, stackPosition, scaleEndPosition, onStackMetrics]);
 
   const calculateProgress = useCallback((scrollTop: number, start: number, end: number) => {
     if (scrollTop < start) return 0;
@@ -229,9 +253,9 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
 
   return (
     <div className={`scroll-stack-scroller ${className}`.trim()} ref={scrollerRef}>
-      <div className="scroll-stack-inner pt-[20vh] px-20 pb-200">
+      <div className="scroll-stack-inner">
         {children}
-        <div className="scroll-stack-end w-full h-px" />
+        <div className="scroll-stack-end" />
       </div>
     </div>
   );
