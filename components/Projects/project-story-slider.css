@@ -1,0 +1,348 @@
+/* ─────────────────────────────────────────────
+   PROJECT STORIES
+───────────────────────────────────────────── */
+
+.project-stories {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  overflow: auto;
+  scrollbar-width: none;
+  border-bottom: 1px solid #262626;
+}
+
+.project-stories::-webkit-scrollbar {
+  display: none;
+  opacity: 0;
+}
+
+.project-stories a + a {
+  margin-left: 12px;
+}
+
+.project-stories a {
+  color: #fff;
+  text-decoration: none;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition-duration: 300ms;
+  transition-property: opacity;
+}
+
+.project-stories a:active {
+  opacity: 0.55;
+  transition-duration: 50ms;
+}
+
+.project-stories-avatar {
+  position: relative;
+  border-radius: 50%;
+  padding: 4px;
+  background-image: linear-gradient(
+    to right top,
+    #ffc600 20%,
+    #ff0040,
+    #e600cc 80%
+  );
+}
+
+.project-stories-avatar::before {
+  content: '';
+  position: absolute;
+  left: 2px;
+  top: 2px;
+  right: 2px;
+  bottom: 2px;
+  background: #000;
+  border-radius: 50%;
+  z-index: 1;
+}
+
+.project-stories-avatar img {
+  position: relative;
+  z-index: 2;
+  display: block;
+  /* width: 64px;
+  height: 64px; */
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.project-stories-name {
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1;
+  margin-top: 10px;
+}
+
+/* ─────────────────────────────────────────────
+   PROJECT POST (was .demo-post)
+───────────────────────────────────────────── */
+
+.project-post-header {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+}
+
+.project-post-header-actions {
+  appearance: none;
+  margin: 0;
+  padding: 0;
+  border: none;
+  outline: 0;
+  position: relative;
+  box-shadow: none;
+  border-radius: 0;
+  background: none;
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  transition-duration: 300ms;
+  transition-property: opacity;
+}
+
+.project-post-header-actions:active {
+  opacity: 0.55;
+  transition-duration: 50ms;
+}
+
+.project-post-header-actions span {
+  width: 3px;
+  height: 3px;
+  background: #fff;
+  border-radius: 50%;
+}
+
+.project-post-header-actions span + span {
+  margin-left: 3px;
+}
+
+.project-post-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  margin-right: 8px;
+  padding: 2px;
+  box-sizing: border-box;
+  position: relative;
+  cursor: pointer;
+  background-image: linear-gradient(
+    to right top,
+    #ffc600 20%,
+    #ff0040,
+    #e600cc 80%
+  );
+  transition-property: opacity;
+  transition-duration: 200ms;
+}
+
+.project-post-avatar:active {
+  opacity: 0.55;
+  transition-duration: 0;
+}
+
+.project-post-avatar::before {
+  content: '';
+  left: 1px;
+  top: 1px;
+  right: 1px;
+  bottom: 1px;
+  background: #000;
+  position: absolute;
+  border-radius: 50%;
+  z-index: 0;
+}
+
+.project-post-avatar img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center;
+  position: relative;
+  z-index: 1;
+}
+
+.project-post-name {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.project-post-image {
+  height: 320px;
+}
+
+.project-post-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.project-post-footer {
+  padding: 16px;
+}
+
+.project-post-footer-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 16px;
+}
+
+.project-post-footer-actions-left,
+.project-post-footer-actions-right {
+  display: flex;
+  align-items: center;
+}
+
+.project-post-footer-actions button {
+  appearance: none;
+  border: none;
+  outline: 0;
+  position: relative;
+  box-shadow: none;
+  border-radius: 0;
+  background: none;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  transition-duration: 300ms;
+  transition-property: opacity;
+  padding: 0;
+  margin: 0;
+}
+
+.project-post-footer-actions button:active {
+  opacity: 0.55;
+  transition-duration: 50ms;
+}
+
+.project-post-footer-actions button img {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  object-position: center;
+}
+
+.project-post-footer-actions button + button {
+  margin-left: 16px;
+}
+
+.project-post-likes {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.project-post-content {
+  font-size: 14px;
+  margin-top: 4px;
+  line-height: 1.25;
+}
+
+.project-post-content-name {
+  font-weight: 600;
+}
+
+.project-post-content-text {
+  opacity: 0.85;
+}
+
+.project-post-date {
+  margin-top: 4px;
+  font-size: 12px;
+  opacity: 0.5;
+  font-weight: 500;
+}
+
+/* ─────────────────────────────────────────────
+   STORIES SLIDER
+───────────────────────────────────────────── */
+
+.stories-slider {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1000;
+  transform: translate3d(0, 0, 0) scale(0.5);
+  opacity: 0;
+  background: #000;
+  pointer-events: none;
+}
+.stories-slider:not(.stories-slider-in):not(.stories-slider-out) {
+  z-index: 0;
+}
+
+@media (min-width: 415px), (min-height: 897px) {
+  .stories-slider {
+    background: rgb(41, 40, 49);
+  }
+}
+
+.stories-slider > .swiper {
+  z-index: 2;
+  max-width: 414px;
+  max-height: 896px;
+}
+
+.stories-slider * {
+  pointer-events: none;
+}
+
+.stories-slider.stories-slider-in,
+.stories-slider.stories-slider-in * {
+  pointer-events: auto;
+}
+
+.stories-slider-in {
+  animation: stories-slider-in 400ms forwards;
+  transform: translate3d(0, 0, 0) scale(1);
+  opacity: 1;
+}
+
+.stories-slider-out {
+  pointer-events: none;
+  animation: stories-slider-out 400ms forwards;
+}
+
+/* ─────────────────────────────────────────────
+   ANIMATIONS
+───────────────────────────────────────────── */
+
+@keyframes stories-slider-in {
+  0% {
+    transform: translate3d(0, 0, 0) scale(0.5);
+    opacity: 0;
+  }
+  50% {
+    transform: translate3d(0, 0, 0) scale(1.05);
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes stories-slider-out {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: translate3d(0, 0, 0) scale(0.5);
+    opacity: 0;
+  }
+  100% {
+    transform: translate3d(0, 0, 0) scale(0.5);
+    opacity: 0;
+  }
+}

@@ -1,9 +1,9 @@
 'use client';
 
-import Lenis from "lenis";
-import Image from "next/image";
-import { gsap, ScrollTrigger } from "@/lib/gsap";
 import { useLayoutEffect, useRef } from "react";
+import Image from "next/image";
+import { useLenis } from "@/providers/LenisProvider";
+import { gsap, ScrollTrigger } from "@/lib/gsap";
 
 const ScrollFlipCards: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -13,21 +13,10 @@ const ScrollFlipCards: React.FC = () => {
   const isGapAnimationCompleted = useRef(false);
   const isFlipAnimationCompleted = useRef(false);
 
+  const lenis = useLenis();
+
   useLayoutEffect(() => {
-    // -----------------------------------
-    // Lenis setup (smooth scrolling)
-    // -----------------------------------
-    const lenis = new Lenis();
-
-    const updateScroll = () => ScrollTrigger.update();
-    lenis.on("scroll", updateScroll);
-
-    const tickerFn = (time: number) => {
-      lenis.raf(time * 1000);
-    };
-
-    gsap.ticker.add(tickerFn);
-    gsap.ticker.lagSmoothing(0);
+    if (!lenis) return;
 
     // -----------------------------------
     // GSAP scoped context
@@ -65,6 +54,7 @@ const ScrollFlipCards: React.FC = () => {
           scrub: true,
           pinSpacing: true,
           anticipatePin: 1,
+          refreshPriority: -1,
 
           onUpdate: (self) => {
             const progress = self.progress;
@@ -169,10 +159,8 @@ const ScrollFlipCards: React.FC = () => {
     // -----------------------------------
     return () => {
       ctx.revert();              // <-- kills only this component’s triggers + gsap calls
-      gsap.ticker.remove(tickerFn);
-      lenis.destroy();
     };
-  }, []);
+  }, [lenis]);
 
   return (
     <div ref={containerRef} className="scroll-flip">
@@ -188,7 +176,7 @@ const ScrollFlipCards: React.FC = () => {
       <div ref={cardRef} className="scroll-flip-cards-container">
         <div className="scroll-flip-card" id="flip-card-1">
           <div className="scroll-flip-card-front">
-            <Image src="/50.png" alt="Innovation" width={300} height={200} />
+            <Image src="/scrollFlip_01.png" alt="Innovation" width={300} height={200} />
           </div>
           <div className="scroll-flip-card-back">
             <span>( 1 )</span>
@@ -198,7 +186,7 @@ const ScrollFlipCards: React.FC = () => {
 
         <div className="scroll-flip-card" id="flip-card-2">
           <div className="scroll-flip-card-front">
-            <Image src="/50.png" alt="Quality" width={300} height={200} />
+            <Image src="/scrollFlip_02.png" alt="Quality" width={300} height={200} />
           </div>
           <div className="scroll-flip-card-back">
             <span>( 2 )</span>
@@ -208,7 +196,7 @@ const ScrollFlipCards: React.FC = () => {
 
         <div className="scroll-flip-card" id="flip-card-3">
           <div className="scroll-flip-card-front">
-            <Image src="/50.png" alt="Design" width={300} height={200} />
+            <Image src="/scrollFlip_03.png" alt="Design" width={300} height={200} />
           </div>
           <div className="scroll-flip-card-back">
             <span>( 3 )</span>

@@ -239,6 +239,9 @@
   padding: 2px 0;
   display: inline-block;
   transition: color 0.3s ease, opacity 0.3s ease;
+  @variant dark {
+    color: #fff;
+  }
 }
 
 .sm-socials-link:hover {

@@ -3,6 +3,7 @@
 import { ReactNode, createContext, useContext, useEffect, useRef, useState } from 'react';
 import Lenis from 'lenis';
 import { ScrollTrigger } from '@/lib/gsap';
+import 'lenis/dist/lenis.css'
 
 interface LenisContextValue {
   lenis: Lenis | null;
@@ -24,12 +25,34 @@ export const LenisProvider = ({ children }: { children: ReactNode }) => {
       infinite: false,
     });
 
-    // Use microtask to avoid synchronous setState inside useEffect warning
+    // Set lenis instance in state
     Promise.resolve().then(() => setLenis(lenisInstance));
 
+    // -------------------------------
+    // ScrollTrigger scrollerProxy
+    // -------------------------------
+    ScrollTrigger.scrollerProxy(document.body, {
+      scrollTop(value) {
+        if (arguments.length) {
+          lenisInstance.scrollTo(value, { duration: 0 });
+        }
+        return lenisInstance.scroll;
+      },
+      getBoundingClientRect() {
+        return { top: 0, left: 0, width: window.innerWidth, height: window.innerHeight };
+      },
+      pinType: document.body.style.transform ? 'transform' : 'fixed',
+    });
+
+    // Refresh ScrollTrigger after setup
+    ScrollTrigger.refresh();
+
+    // -------------------------------
+    // RAF loop
+    // -------------------------------
     const raf = (time: number) => {
       lenisInstance.raf(time);
-      ScrollTrigger.update();
+      ScrollTrigger.update(); // keep pinned sections and animations in sync
       rafRef.current = requestAnimationFrame(raf);
     };
     rafRef.current = requestAnimationFrame(raf);

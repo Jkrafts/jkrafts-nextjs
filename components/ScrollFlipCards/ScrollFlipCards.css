@@ -6,7 +6,7 @@
 
 .scroll-flip {
   font-family: "Instrument Serif", sans-serif;
-  @apply lg:relative lg:w-full h-max lg:h-svh py-16 px-8 lg:p-8 flex flex-col lg:flex-row lg:justify-center lg:items-center;
+  @apply lg:relative lg:w-full h-max lg:h-svh py-16 px-8 flex flex-col lg:flex-row lg:justify-center lg:items-center;
 }
 
 .scroll-flip img {
@@ -18,7 +18,7 @@
 }
 
 .scroll-flip .sticky-header h2 {
-  @apply text-3xl md:text-4xl lg:text-6xl font-medium mb-4 opacity-100 lg:relative lg:text-center lg:will-change-[transform,opacity] lg:transform lg:translate-y-10 lg:opacity-0;
+  @apply font-instrument text-3xl md:text-4xl lg:text-6xl font-medium mb-4 opacity-100 lg:relative lg:text-center lg:will-change-[transform,opacity] lg:transform lg:translate-y-10 lg:opacity-0;
 }
 
 .scroll-flip p {
@@ -57,7 +57,7 @@
   @apply flex items-center justify-center text-center lg:rotate-y-180 p-8;
 }
 
-.scroll-flip .scroll-flip-card-back span{
+.scroll-flip .scroll-flip-card-back span {
   @apply absolute top-8 left-8 lg:opacity-40;
 }
 
