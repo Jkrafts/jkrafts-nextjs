@@ -15,7 +15,7 @@ export interface TargetCursorProps {
 const TargetCursor: React.FC<TargetCursorProps> = ({
   targetSelector = '.cursor-target',
   spinDuration = 2,
-  hideDefaultCursor = true,
+  hideDefaultCursor = false,
   hoverDuration = 0.2,
   parallaxOn = true
 }) => {

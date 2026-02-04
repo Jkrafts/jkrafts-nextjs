@@ -50,11 +50,11 @@ export default function RootLayout({
           enableSystem={false}
           disableTransitionOnChange={false}
         >
-          <TargetCursor
+          {/* <TargetCursor
             spinDuration={2}
             parallaxOn
             hoverDuration={0.2}
-          />
+          /> */}
           {children}
         </ThemeProvider>
       </body>
