@@ -15,7 +15,7 @@ export default function SnapLayout({ children,}: {children: React.ReactNode}) {
 
   return (
       <>
-        {/* <Navbar /> */}
+        <Navbar />
         <div className="snap-root">
           {children}
         <Footer />
