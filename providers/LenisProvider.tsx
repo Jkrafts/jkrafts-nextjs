@@ -33,7 +33,7 @@ export const LenisProvider = ({ children }: { children: ReactNode }) => {
     // -------------------------------
     ScrollTrigger.scrollerProxy(document.body, {
       scrollTop(value) {
-        if (arguments.length) {
+        if (arguments.length && value !== undefined) {
           lenisInstance.scrollTo(value, { duration: 0 });
         }
         return lenisInstance.scroll;
