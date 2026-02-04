@@ -35,20 +35,22 @@ const Navbar = () => {
 
       
       // Shrink the header & container
+      // NOTE: This only affects the nav container, not the menu panel
+      // The menu panel is now positioned fixed to viewport
       tl.to(nav, {
-        height: "50px",
-        padding: "0 1rem",
-        width: "1200px",
-        top: "32px",
-        left: "50%",
-        x: "-50%",
-        borderWidth: "1px",
-        borderRadius: "8px",
+        // height: "50px",
+        // padding: "0 1rem",
+        // width: "1200px",
+        // top: "32px",
+        // left: "50%",
+        // x: "-50%",
+        // borderWidth: "1px",
+        // borderRadius: "8px",
         ease: "power1.out",
       }, 0);
 
       tl.to(header, {
-        padding: "0.6em",
+        // padding: "0.6em",
         ease: "power1.out",
       }, 0);
 
@@ -59,7 +61,7 @@ const Navbar = () => {
         ease: "none",
         onComplete: () => nav.classList.add('shadow-lg'),
         onReverseComplete: () => nav.classList.remove('shadow-lg')
-      }, 0.70); // start at 95% of the timeline
+      }, 0.70); // start at 70% of the timeline
 
     }, navRef);
 
@@ -70,7 +72,7 @@ const Navbar = () => {
   const menuItems = [
     { label: 'Home', ariaLabel: 'Go to home page', link: '/' },
     { label: 'About', ariaLabel: 'Learn about us', link: '/about' },
-    // { label: 'Services', ariaLabel: 'View our services', link: '/services' },
+    // { label: 'Services', ariaLabel: 'View our services', link: '/services' }, 
     { label: 'Work', ariaLabel: 'View our projects', link: '/projects' },
     { label: 'Contact', ariaLabel: 'Get in touch', link: '/contact' }
   ];
@@ -85,7 +87,7 @@ const Navbar = () => {
     <StaggeredMenu
       ref={navRef}
       position="right"
-      isFixed={false}
+      isFixed={true}
       items={menuItems}
       socialItems={socialItems}
       displaySocials={true}
