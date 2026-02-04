@@ -5,6 +5,7 @@ import { useState, useRef, useLayoutEffect } from 'react';
 import ScrollStack, { ScrollStackItem }  from './index';
 import { gsap, ScrollTrigger } from '@/lib/gsap';
 import { projects } from '@/data/projects';
+import CursorLink from '../TargetCursor/CursorLink';
 
 export const ScrollStackContainer = () => {
 
@@ -102,6 +103,9 @@ export const ScrollStackContainer = () => {
           console.log({metrics})
           ScrollTrigger.refresh();
         }}
+        onStackComplete={() => {
+          isStackAnimationCompleted.current = true;
+        }}
       >
 
         {projects.slice(0, 3).map((project, index) => (
@@ -110,10 +114,10 @@ export const ScrollStackContainer = () => {
             itemClassName={`shadow-lg`}
             style={{'--scroll-stack-card-background': project.accentColor} as React.CSSProperties}
           >
-            <h2 className="text-2xl font-bold mb-2">{project.title}</h2>
-            <p className="text-gray-600 dark:text-gray-300">{project.shortTagline}</p>
-            <div>
-              <h3 className="mt-4 font-semibold">Skills:</h3>
+            <h2 className="text-2xl font-bold mb-2 text-white">{project.title}</h2>
+            <p className="text-gray-300 dark:text-gray-300">{project.shortTagline}</p>
+            <div className='text-white'>
+              <h3 className="mt-4 font-semibold text-white">Skills:</h3>
               <ul className="flex list-none gap-2 flex-wrap">
                 {project.skills.map((skill, skillIndex) => (
                   <li key={skillIndex}>{skill}</li>
@@ -124,6 +128,12 @@ export const ScrollStackContainer = () => {
         ))}
 
       </ScrollStack>
+
+      <div className='text-center'>
+        <CursorLink href="/projects" className='inline-block mt-8 text-lg text-primary hover:underline'>
+          View full project list...
+        </CursorLink>
+      </div>
     </div>
   )
 }

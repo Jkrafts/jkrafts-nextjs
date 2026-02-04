@@ -95,7 +95,7 @@
 }
 .stories-slider-button-next {
   right: 0;
-  width: 70%;
+  width: 30%;
 }
 .stories-slider-button-next::before {
   background-image: linear-gradient(to left, #000, rgba(0, 0, 0, 0));

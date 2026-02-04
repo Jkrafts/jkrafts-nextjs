@@ -3,7 +3,7 @@
 import React, { useRef } from 'react';
 import Image from 'next/image';
 import { projects } from '@/data/projects';
-import ProjectsSlider, { StorySliderHandle } from '@/components/Projects/ProjectsSlider';{}
+import ProjectsSlider, { StorySliderHandle } from '@/components/Projects/ProjectsSlider';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Scrollbar } from 'swiper/modules';
 
@@ -50,7 +50,7 @@ const Page: React.FC = () => {
               <SwiperSlide
                 key={index}
                 onClick={() => storySliderRef.current?.open(index)}
-                className="w-60 shrink-0 flex flex-col gap-4  justify-center items-center cursor-pointer select-none"
+                className="cursor-target w-60 shrink-0 flex flex-col gap-4 justify-center items-center cursor-pointer select-none"
               >
                 <div className="p-4 h-32 w-32 mx-auto border rounded-full text-center project-stories-avatar">
                   <Image 

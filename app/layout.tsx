@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
 import { Inter, Manrope, Instrument_Serif, Space_Grotesk } from "next/font/google";
-import "./globals.css";
 import ThemeProvider from "@/src/theme-provider";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import { LenisProvider } from "@/providers/LenisProvider";
+import TargetCursor from "@/components/TargetCursor";
+
+import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Jkrafts",
@@ -51,6 +50,11 @@ export default function RootLayout({
           enableSystem={false}
           disableTransitionOnChange={false}
         >
+          <TargetCursor
+            spinDuration={2}
+            parallaxOn
+            hoverDuration={0.2}
+          />
           {children}
         </ThemeProvider>
       </body>

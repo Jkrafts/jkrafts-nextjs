@@ -84,7 +84,7 @@ const ProjectsSlider = forwardRef<StorySliderHandle, StorySliderProps>(
           sliderRef.current = instance;
         }}
         onSlidesIndexesChange={(mainIndex, subIndex) => {
-          console.log({mainIndex, subIndex})
+          // console.log({mainIndex, subIndex})
         }}
         onEnd={close}
       >

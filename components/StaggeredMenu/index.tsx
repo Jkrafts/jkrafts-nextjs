@@ -423,7 +423,7 @@ export const StaggeredMenu = forwardRef<HTMLDivElement, StaggeredMenuProps>(
           <DarkModeToggle />
           <button
             ref={toggleBtnRef}
-            className="sm-toggle"
+            className="sm-toggle cursor-target"
             aria-label={open ? 'Close menu' : 'Open menu'}
             aria-expanded={open}
             aria-controls="staggered-menu-panel"
@@ -453,7 +453,7 @@ export const StaggeredMenu = forwardRef<HTMLDivElement, StaggeredMenuProps>(
             {items && items.length ? (
               items.map((it, idx) => (
                 <li className="sm-panel-itemWrap" key={it.label + idx}>
-                  <a className="sm-panel-item" href={it.link} aria-label={it.ariaLabel} data-index={idx + 1}>
+                  <a className="sm-panel-item cursor-target" href={it.link} aria-label={it.ariaLabel} data-index={idx + 1}>
                     <span className="sm-panel-itemLabel">{it.label}</span>
                   </a>
                 </li>
@@ -471,7 +471,7 @@ export const StaggeredMenu = forwardRef<HTMLDivElement, StaggeredMenuProps>(
               <h3 className="sm-socials-title">Socials</h3>
               <ul className="sm-socials-list" role="list">
                 {socialItems.map((s, i) => (
-                  <li key={s.label + i} className="sm-socials-item">
+                  <li key={s.label + i} className="sm-socials-item cursor-target">
                     <a href={s.link} target="_blank" rel="noopener noreferrer" className="sm-socials-link">
                       {s.label}
                     </a>

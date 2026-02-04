@@ -31,7 +31,7 @@ const ContactForm = () => {
               <div className="bg-pf-icon-surface h-10 w-10 rounded-full flex items-center justify-center shrink-0">
                 <Icon name="email" alt="Mail Icon" size={28} />
               </div>
-              <a href="#" className="text-sm ml-4">
+              <a href="#" className="text-sm ml-4 cursor-target">
                 <small className="block text-text">Mail</small>
                 <span className="text-blue-600 font-medium">info@jkrafts.com</span>
               </a>
@@ -42,17 +42,17 @@ const ContactForm = () => {
         <div className="mt-12">
           <h2 className="text-text text-base font-semibold">Socials</h2>
           <ul className="flex mt-4 space-x-4">
-            <li className="bg-pf-icon-surface h-10 w-10 rounded-full flex items-center justify-center shrink-0">
+            <li className="cursor-target bg-pf-icon-surface h-10 w-10 rounded-full flex items-center justify-center shrink-0">
               <a href="#">
                 <Icon name="facebook" alt="FaceBook Icon" size={28} />
               </a>
             </li>
-            <li className="bg-pf-icon-surface h-10 w-10 rounded-full flex items-center justify-center shrink-0">
+            <li className="cursor-target bg-pf-icon-surface h-10 w-10 rounded-full flex items-center justify-center shrink-0">
               <a href="#">
                 <Icon name="linkedin" alt="LinkedIn Icon" size={28} />
               </a>
             </li>
-            <li className="bg-pf-icon-surface h-10 w-10 rounded-full flex items-center justify-center shrink-0">
+            <li className="cursor-target bg-pf-icon-surface h-10 w-10 rounded-full flex items-center justify-center shrink-0">
               <a href="#">
                 <Icon name="x" alt="X(Formerly Twitter) Icon" size={28} />
               </a>
@@ -83,7 +83,7 @@ const ContactForm = () => {
           {errors.message?.type === "required" && (<p role="alert" className="text-red-500 text-xs">Message is required</p>)}
 
         <button type='submit'
-          className="text-white bg-blue-600 hover:bg-blue-700 rounded-md text-sm font-medium px-4 py-2.5 w-full cursor-pointer border-0 mt-2">Send message</button>
+          className="text-white bg-blue-600 hover:bg-blue-700 rounded-md text-sm font-medium px-4 py-2.5 w-full cursor-pointer border-0 mt-2 cursor-target">Send message</button>
       </form>
     </div>
   )

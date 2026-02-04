@@ -63,7 +63,7 @@ export default function Story({
         <div className="stories-slider-actions">
           <button
             type="button"
-            className="stories-slider-close-button"
+            className="stories-slider-close-button cursor-target"
             onClick={onClose}
           />
         </div>
