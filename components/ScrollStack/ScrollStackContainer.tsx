@@ -57,7 +57,7 @@ export const ScrollStackContainer = () => {
           scrub: false,
           pinSpacing: false,
           anticipatePin: 1,
-          markers: true,
+          markers: false,
           invalidateOnRefresh: true,
           refreshPriority: 1,
 
