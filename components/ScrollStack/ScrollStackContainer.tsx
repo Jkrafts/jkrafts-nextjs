@@ -69,10 +69,10 @@ export const ScrollStackContainer = () => {
             }
           },
           onRefresh(self) {
-            console.log({
-              start: self.start,
-              scroll: self.scroll()
-            });
+            // console.log({
+            //   start: self.start,
+            //   scroll: self.scroll()
+            // });
           }
       });
 
@@ -100,7 +100,7 @@ export const ScrollStackContainer = () => {
         useWindowScroll={true}
         onStackMetrics={(metrics) => {
           stackMetricsRef.current = metrics;
-          console.log({metrics})
+          // console.log({metrics})
           ScrollTrigger.refresh();
         }}
         onStackComplete={() => {
