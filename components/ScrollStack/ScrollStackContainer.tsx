@@ -119,9 +119,16 @@ export const ScrollStackContainer = () => {
             <div className='text-white'>
               <h3 className="mt-4 font-semibold text-white">Skills:</h3>
               <ul className="flex list-none gap-2 flex-wrap">
-                {project.skills.map((skill, skillIndex) => (
-                  <li key={skillIndex}>{skill}</li>
-                ))}
+                {project.skills.map((skill, skillIndex) => {
+
+                  return(
+                    <>
+                      <li key={skillIndex}>{skill}
+                        {skillIndex !== project.skills.length - 1 ?',' : ''}
+                      </li>
+                    </>
+                  )
+                })}
               </ul>
             </div>
           </ScrollStackItem>
