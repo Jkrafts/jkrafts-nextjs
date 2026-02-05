@@ -44,6 +44,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning className={`${interFont.variable} ${manropeFont.variable} ${instrumentSerifFont.variable} ${spaceGroteskFont.variable}`}>
       <GoogleTagManager gtmId="GTM-PXL6NLM5" />
+      <GoogleTagManager gtmId="G-8YGCX4RECJ" />
       <body className="antialiased container_ pattern-dotted overflow-x-clip">
         
         <ThemeProvider
