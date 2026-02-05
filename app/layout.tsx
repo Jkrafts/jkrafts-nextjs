@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Manrope, Instrument_Serif, Space_Grotesk } from "next/font/google";
+import { GoogleTagManager } from '@next/third-parties/google'
 import ThemeProvider from "@/src/theme-provider";
 import TargetCursor from "@/components/TargetCursor";
 
@@ -42,6 +43,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning className={`${interFont.variable} ${manropeFont.variable} ${instrumentSerifFont.variable} ${spaceGroteskFont.variable}`}>
+      <GoogleTagManager gtmId="GTM-PXL6NLM5" />
       <body className="antialiased container_ pattern-dotted overflow-x-clip">
         
         <ThemeProvider
