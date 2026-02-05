@@ -58,7 +58,7 @@
 }
 
 .scroll-flip .scroll-flip-card-back span {
-  @apply absolute top-8 left-8 lg:opacity-40;
+  @apply absolute top-8 left-8 lg:opacity-90;
 }
 
 .scroll-flip #flip-card-1 .scroll-flip-card-back {
@@ -72,3 +72,7 @@
 .scroll-flip #flip-card-3 .scroll-flip-card-back {
   background-color: var(--card-3);
 }
+.scroll-flip #flip-card-2 .scroll-flip-card-back *,
+.scroll-flip #flip-card-3 .scroll-flip-card-back * {
+  color: #dee;
+ }
