@@ -7,7 +7,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Jkrafts",
-  description: "One stop shop for all your web development needs.",
+  description: "Crafting Digital Solutions.",
 };
 
 const interFont = Inter({ 
@@ -50,11 +50,11 @@ export default function RootLayout({
           enableSystem={false}
           disableTransitionOnChange={false}
         >
-          {/* <TargetCursor
+          <TargetCursor
             spinDuration={2}
             parallaxOn
             hoverDuration={0.2}
-          /> */}
+          />
           {children}
         </ThemeProvider>
       </body>

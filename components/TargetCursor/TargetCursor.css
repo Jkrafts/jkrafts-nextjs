@@ -1,5 +1,6 @@
 :root {
   --target-cursor-color: #000;
+  --cursor-blend: difference;
 }
 
 html.dark {
@@ -8,6 +9,7 @@ html.dark {
 
 html.light {
   --target-cursor-color: #000;
+  --cursor-blend: normal;
 }
 
 .target-cursor-wrapper {
@@ -18,7 +20,7 @@ html.light {
   height: 0;
   pointer-events: none;
   z-index: 9999;
-  mix-blend-mode: difference;
+  mix-blend-mode: var(--cursor-blend);
   transform: translate(-50%, -50%);
 }
 
