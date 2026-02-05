@@ -150,7 +150,7 @@ export const projects: ProjectStory[] = [
       type: 'image',
       src: '/projects/business/cover.jpg'
     },
-    skills: ['WordPress', 'UI Design', 'Performance'],
+    skills: ['Twill CMS', 'Laravel', 'UI Design', 'Performance'],
     accentColor: '#0ea5e9',
     slides: [
       {
@@ -244,57 +244,6 @@ export const projects: ProjectStory[] = [
     ]
   },
   {
-    id: 'interactive-ui',
-    title: 'Interactive Web Experience',
-    shortTagline: 'Motion-driven UI experiments.',
-    category: 'Web App',
-    cover: {
-      type: 'video',
-      src: '/projects/interactive/cover.mp4'
-    },
-    skills: ['GSAP', 'Three.js', 'UI Engineering'],
-    accentColor: '#a855f7',
-    icon: 'store-front',
-    slides: [
-      {
-        id: 'cover',
-        type: 'cover',
-        title: 'Interactive Web Experience',
-        body: 'Bringing delight through motion and interactivity.'
-      },
-      {
-        id: 'problem',
-        type: 'challenge',
-        title: 'The Challenge',
-        body: 'Exploring how motion enhances usability and delight.'
-      },
-      {
-        id: 'craft',
-        type: 'craft',
-        title: 'The Craft',
-        bullets: [
-          'GSAP animations',
-          'WebGL experiments',
-          'Component-driven UI'
-        ]
-      },
-      {
-        id: 'process',
-        type: 'process',
-        title: 'The Process',
-        media: {
-          type: 'video',
-          src: '/projects/interactive/demo.mp4'
-        }
-      },
-      {
-        id: 'result',
-        type: 'result',
-        title: 'The Result',
-        body: 'A playful but performant experimental build.'
-      }
-    ]
-  },{
     id: 'interactive-ui',
     title: 'Interactive Web Experience',
     shortTagline: 'Motion-driven UI experiments.',
