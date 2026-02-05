@@ -15,6 +15,10 @@ html[data-layout='snap'] body {
   scroll-snap-type: y mandatory; */
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 @custom-variant dark (&:where(.dark, .dark *));
 /* -------------------
    LIGHT MODE THEME
@@ -287,6 +291,15 @@ html[data-layout='snap'] body {
   @variant dark {
     color: rgb(var(--color-dark-text)) !important;
   }
+}
+
+@utility cta {
+  @apply block mx-auto font-manrope text-lg border-2 border-transparent md:text-xl
+  py-2 px-6 rounded-lg transition duration-300
+  bg-[rgb(var(--color-primary))] text-white
+  hover:bg-white hover:text-[rgb(var(--color-primary))] 
+  hover:border-[rgb(var(--color-primary))] 
+  ;
 }
 
 /* Header Nav */

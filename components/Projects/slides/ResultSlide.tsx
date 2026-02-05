@@ -24,7 +24,7 @@ const ResultSlide = ({ data }: ResultSlideProps) => {
       </div>
 
       <div>
-        <CursorLink href="/contact" className="pointer-events-auto! block mx-auto font-manrope text-lg md:text-xl bg-blue-500 hover:bg-blue-600 text-white py-2 px-6 rounded-lg transition duration-300">Let&apos;s Talk &raquo;</CursorLink>
+        <CursorLink href="/contact" className="pointer-events-auto! cta">Let&apos;s Talk &raquo;</CursorLink>
       </div>
     </div>
   );

@@ -130,7 +130,7 @@ export const ScrollStackContainer = () => {
       </ScrollStack>
 
       <div className='flex flex-col'>
-        <CursorLink href="/projects" className='block mx-auto font-manrope text-lg md:text-xl bg-blue-500 hover:bg-blue-600 text-white py-2 px-6 rounded-lg transition duration-300'>
+        <CursorLink href="/projects" className='cta'>
           View full project list...
         </CursorLink>
       </div>
