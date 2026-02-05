@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef, useCallback, useMemo, useState } from 'react';
+import { useEffect, useRef, useCallback, useMemo } from 'react';
 import { gsap } from '@/lib/gsap';
 import './TargetCursor.css';
 
@@ -15,7 +15,7 @@ export interface TargetCursorProps {
 const TargetCursor: React.FC<TargetCursorProps> = ({
   targetSelector = '.cursor-target',
   spinDuration = 2,
-  hideDefaultCursor = false,
+  hideDefaultCursor = true,
   hoverDuration = 0.2,
   parallaxOn = true
 }) => {
@@ -29,37 +29,15 @@ const TargetCursor: React.FC<TargetCursorProps> = ({
   const tickerFnRef = useRef<(() => void) | null>(null);
   const activeStrengthRef = useRef({ current: 0 });
 
-  // const isMobile = useMemo(() => {
-  //   const hasTouchScreen = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-  //   const isSmallScreen = window.innerWidth <= 768;
-  //   const userAgent = navigator.userAgent || navigator.vendor || (window as any).opera;
-  //   const mobileRegex = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i;
-  //   const isMobileUserAgent = mobileRegex.test(userAgent.toLowerCase());
-  //   return (hasTouchScreen && isSmallScreen) || isMobileUserAgent;
-  // }, []);
-
-  const [isMobile] = useState(() => {
-    if (typeof window === 'undefined') {
-      // Server render: assume desktop
-      return false;
-    }
-
-    const hasTouchScreen =
-      'ontouchstart' in window || navigator.maxTouchPoints > 0;
-
+  const isMobile = useMemo(() => {
+    if(typeof window === "undefined") return;
+    const hasTouchScreen = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
     const isSmallScreen = window.innerWidth <= 768;
-
-    const userAgent =
-      navigator.userAgent || navigator.vendor || (window as any).opera;
-
-    const mobileRegex =
-      /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i;
-
+    const userAgent = navigator.userAgent || navigator.vendor || (window as any).opera;
+    const mobileRegex = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i;
     const isMobileUserAgent = mobileRegex.test(userAgent.toLowerCase());
-
     return (hasTouchScreen && isSmallScreen) || isMobileUserAgent;
-  });
-
+  }, []);
 
   const constants = useMemo(() => ({ borderWidth: 3, cornerSize: 12 }), []);
 
