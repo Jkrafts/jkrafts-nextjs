@@ -36,7 +36,7 @@ const Navbar = () => {
       changeMenuColorOnOpen={true}
       colors={['#B19EEF', '#5227FF']}
       logoUrl="/logo.png"
-      accentColor="#ff6b6b"
+      accentColor="#A855F7"
       onMenuOpen={() => console.log('Menu opened')}
       onMenuClose={() => console.log('Menu closed')}
     />
