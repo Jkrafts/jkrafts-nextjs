@@ -2,9 +2,9 @@
 
 export default function Contact() {
   const socials = [
-    { name: "GitHub", link: "https://github.com/yourusername" },
-    { name: "LinkedIn", link: "https://linkedin.com/in/yourusername" },
-    { name: "Twitter", link: "https://twitter.com/yourusername" },
+    { label: 'Twitter', link: 'https://twitter.com/_mfalm3' },
+    { label: 'GitHub', link: 'https://github.com/mfalm3' },
+    { label: 'LinkedIn', link: 'https://linkedin.com/in/joe-waithaka' }
   ];
 
   return (
@@ -13,7 +13,7 @@ export default function Contact() {
         Get In Touch
       </h2>
       <p className="text-muted font-body mb-8">
-        I’m open to new opportunities or collaborations. Let’s build something
+        I&apos;m open to new opportunities or collaborations. Let&apos;s build something
         amazing.
       </p>
 

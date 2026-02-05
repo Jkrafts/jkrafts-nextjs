@@ -75,19 +75,31 @@ const ContactForm = () => {
               </a>
             </li>
           </ul>
-        </div>
+          </div>
 
         <div className="mt-12">
           <h2 className="text-text text-base font-semibold">Socials</h2>
           <ul className="flex mt-4 space-x-4">
-            {["github", "linkedin", "facebook", "x"].map((social) => (
-              <li
-                key={social}
-                className="cursor-target bg-pf-icon-surface h-10 w-10 rounded-full flex items-center justify-center shrink-0"
-              >
-                <Icon name={social} alt={`${social} Icon`} size={28} />
-              </li>
-            ))}
+            <li className="cursor-target bg-pf-icon-surface h-10 w-10 rounded-full flex items-center justify-center shrink-0">
+              <a href="https://www.github.com/mfalm3">
+                <Icon name="github" alt="Github Icon" size={28} />
+              </a>
+            </li>
+            <li className="cursor-target bg-pf-icon-surface h-10 w-10 rounded-full flex items-center justify-center shrink-0">
+              <a href="https://www.linkedin.com/in/joe-waithaka/">
+                <Icon name="linkedin" alt="LinkedIn Icon" size={28} />
+              </a>
+            </li>
+            <li className="cursor-target bg-pf-icon-surface h-10 w-10 rounded-full flex items-center justify-center shrink-0">
+              <a href="https://www.facebook.com/jkrafts7">
+                <Icon name="facebook" alt="FaceBook Icon" size={28} />
+              </a>
+            </li>
+            <li className="cursor-target bg-pf-icon-surface h-10 w-10 rounded-full flex items-center justify-center shrink-0">
+              <a href="https://x.com/_mfalm3">
+                <Icon name="x" alt="X(Formerly Twitter) Icon" size={28} />
+              </a>
+            </li>
           </ul>
         </div>
       </div>

@@ -29,25 +29,25 @@ const page = () => {
               <div>
                 <Icon name="email" alt="Email Icon" size={48} />
                 <h2 className="mt-4 text-2xl font-semibold text-text">Email</h2>
-                <a href="mailto:" className="cursor-target mt-2 text-blue-600 font-medium text-lg">info@jkrafts.com</a>
+                <a href="mailto:info@jkrafts.com" className="cursor-target mt-2 text-blue-600 font-medium text-lg">info@jkrafts.com</a>
               </div>
 
               <div>
                 <Icon name="whatsapp" alt="WhatsApp Icon" size={48} />
                 <h2 className="mt-4 text-2xl font-semibold text-text">Phone</h2>
-                <a href="tel:+1234567890" className="cursor-target mt-2 text-blue-600 font-medium text-lg">+1 (234) 567-890</a>
+                <a href="https://wa.me/+447413049561" className="cursor-target mt-2 text-blue-600 font-medium text-lg">+44 7413 049561</a>
               </div>
 
               <div>
                 <Icon name="facebook" alt="FaceBook Icon" size={48} />
                 <h2 className="mt-4 text-2xl font-semibold text-text">FaceBook</h2>
-                <p className="cursor-target mt-2 text-lg text-muted">FB page</p>
+                <a href="https://www.facebook.com/jkrafts7" className="cursor-target mt-2 text-lg text-blue-600">FB page</a>
               </div>
 
               <div>
                 <Icon name="linkedin" alt="LinkedIn Icon" size={48} />
                 <h2 className="mt-4 text-2xl font-semibold text-text">LinkedIn</h2>
-                <p className="cursor-target mt-2 text-lg text-muted">LinkedIn profile</p>
+                <a href="https://www.linkedin.com/in/joe-waithaka/" className="cursor-target mt-2 text-lg text-blue-600">LinkedIn profile</a>
               </div>
 
             </div>
