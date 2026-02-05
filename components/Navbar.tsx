@@ -1,7 +1,6 @@
 'use client';
 
-import { useLayoutEffect, useRef } from "react";
-import { gsap } from "@/lib/gsap";
+import { useRef } from "react";
 
 import StaggeredMenu from "./StaggeredMenu";
 
@@ -36,7 +35,7 @@ const Navbar = () => {
       openMenuButtonColor="var(--color-text) invert(100%)"
       changeMenuColorOnOpen={true}
       colors={['#B19EEF', '#5227FF']}
-      logoUrl="/50.png"
+      logoUrl="/logo.png"
       accentColor="#ff6b6b"
       onMenuOpen={() => console.log('Menu opened')}
       onMenuClose={() => console.log('Menu closed')}

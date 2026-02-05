@@ -5,6 +5,7 @@ import { gsap } from '@/lib/gsap';
 import Image from 'next/image';
 
 import DarkModeToggle from '../DarkModeToggle';
+import CursorLink from '../TargetCursor/CursorLink';
 
 export interface StaggeredMenuItem {
   label: string;
@@ -46,7 +47,7 @@ export const StaggeredMenu = forwardRef<HTMLDivElement, StaggeredMenuProps>(
       displaySocials = true,
       displayItemNumbering = true,
       className,
-      logoUrl = '/src/assets/logos/reactbits-gh-white.svg',
+      logoUrl = '/logo.png',
       menuButtonColor = '#fff',
       openMenuButtonColor = '#fff',
       changeMenuColorOnOpen = true,
@@ -410,14 +411,16 @@ export const StaggeredMenu = forwardRef<HTMLDivElement, StaggeredMenuProps>(
       </div>
       <header className="staggered-menu-header" aria-label="Main navigation header">
         <div className="sm-logo" aria-label="Logo">
-          <Image
-            src={logoUrl || '/50.png'}
-            alt="Logo"
-            className="sm-logo-img"
-            draggable={false}
-            width={110}
-            height={24}
-          />
+          <CursorLink  href="/">  
+            <Image
+              src={logoUrl}
+              alt="Logo"
+              className="sm-logo-img"
+              draggable={false}
+              width={150}
+              height={48}
+            />
+          </CursorLink>
         </div>
         <div className="flex gap-6">
           <DarkModeToggle />
