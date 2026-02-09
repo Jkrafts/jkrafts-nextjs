@@ -11,6 +11,25 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/scrollbar';
 
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Projects — JKrafts",
+  description:
+    "Explore selected projects by JKrafts showcasing web development, UI engineering, and creative problem solving.",
+  openGraph: {
+    title: "Projects — JKrafts",
+    description:
+      "Explore selected projects by JKrafts showcasing web development, UI engineering, and creative problem solving.",
+    images: [
+      {
+        url: "/og/projects.png",
+        width: 1200,
+        height: 630,
+      },
+    ],
+  },
+};
 
 const Page: React.FC = () => {
   

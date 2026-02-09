@@ -3,13 +3,37 @@ import { Inter, Manrope, Instrument_Serif, Space_Grotesk } from "next/font/googl
 import { GoogleTagManager } from '@next/third-parties/google'
 import ThemeProvider from "@/src/theme-provider";
 import TargetCursor from "@/components/TargetCursor";
+import { siteConfig } from "@/lib/seo";
 
 import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Jkrafts",
-  description: "Crafting Digital Solutions.",
+  description: "JKrafts is a creative web developer crafting modern, high-performance digital experiences with clean design and thoughtful interactions.",
+  metadataBase: new URL(siteConfig.url),
+  openGraph: {
+    title: siteConfig.name,
+    description: siteConfig.description,
+    url: siteConfig.url,
+    siteName: siteConfig.name,
+    images: [
+      {
+        url: siteConfig.ogImage,
+        width: 1200,
+        height: 630,
+        alt: siteConfig.name,
+      },
+    ],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: siteConfig.name,
+    description: siteConfig.description,
+    images: [siteConfig.ogImage],
+  },
 };
+
 
 const interFont = Inter({ 
   subsets: ["latin"], 

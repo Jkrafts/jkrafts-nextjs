@@ -4,6 +4,27 @@ import ContactForm from "@/components/ContactForm";
 import Icon from "@/components/Icon";
 import SectionText from "@/components/SectionText";
 
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Contact — JKrafts",
+  description:
+    "Get in touch with JKrafts to discuss your project, collaboration opportunities, or creative ideas.",
+  openGraph: {
+    title: "Contact — JKrafts",
+    description:
+      "Get in touch with JKrafts to discuss your project, collaboration opportunities, or creative ideas.",
+    images: [
+      {
+        url: "/og/contact.png",
+        width: 1200,
+        height: 630,
+      },
+    ],
+  },
+};
+
+
 const page = () => {
   return (
     <>
