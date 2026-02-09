@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   description:
     "JKrafts is a creative web developer crafting modern, high-performance digital experiences with clean design and thoughtful interactions.",
   openGraph: {
-    title: "Designing and building modern, high-performance web experiences",
+    title: "Design and craft modern, high-performance web experiences",
     description:
       "JKrafts is a creative web developer crafting modern, high-performance digital experiences with clean design and thoughtful interactions.",
     images: [
