@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   description:
     "Explore selected projects by JKrafts showcasing web development, UI engineering, and creative problem solving.",
   openGraph: {
-    title: "Projects — Selected projects showcasing strategy, craft, and execution",
+    title: "Selected projects showcasing strategy, craft, and execution",
     description:
       "Explore selected projects by JKrafts showcasing web development, UI engineering, and creative problem solving.",
     images: [
