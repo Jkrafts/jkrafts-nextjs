@@ -121,12 +121,10 @@ export const ScrollStackContainer = () => {
               <ul className="flex list-none gap-2 flex-wrap">
                 {project.skills.map((skill, skillIndex) => {
 
-                  return(
-                    <>
-                      <li key={skillIndex}>{skill}
-                        {skillIndex !== project.skills.length - 1 ?',' : ''}
-                      </li>
-                    </>
+                  return (
+                    <li key={skillIndex}>{skill}
+                      {skillIndex !== project.skills.length - 1 ?',' : ''}
+                    </li>
                   )
                 })}
               </ul>
