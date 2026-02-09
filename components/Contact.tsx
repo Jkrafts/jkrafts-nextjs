@@ -24,9 +24,9 @@ export default function Contact() {
             href={social.link}
             target="_blank"
             rel="noopener noreferrer"
-            className="px-6 py-3 rounded-lg font-heading text-white bg-gradient-to-r from-[rgb(var(--gradient-start))] via-[rgb(var(--gradient-middle))] to-[rgb(var(--gradient-end))] hover:brightness-110 transition-all"
+            className="px-6 py-3 rounded-lg font-heading text-white bg-linear-to-r from-[rgb(var(--gradient-start))] via-[rgb(var(--gradient-middle))] to-[rgb(var(--gradient-end))] hover:brightness-110 transition-all"
           >
-            {social.name}
+            {social.label}
           </a>
         ))}
       </div>
