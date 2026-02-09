@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   description:
     "Learn more about JKrafts, a creative developer focused on building elegant, user-centric digital products.",
   openGraph: {
-    title: "About — JKrafts",
+    title: "About - Learn about the process, values, and mindset behind my work",
     description:
       "Learn more about JKrafts, a creative developer focused on building elegant, user-centric digital products.",
     images: [

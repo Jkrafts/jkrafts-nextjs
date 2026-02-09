@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   description:
     "Get in touch with JKrafts to discuss your project, collaboration opportunities, or creative ideas.",
   openGraph: {
-    title: "Contact — JKrafts",
+    title: "Contact — Get in touch to discuss ideas, collaborations, or new projects",
     description:
       "Get in touch with JKrafts to discuss your project, collaboration opportunities, or creative ideas.",
     images: [
