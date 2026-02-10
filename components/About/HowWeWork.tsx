@@ -11,7 +11,7 @@ const HowWeWork = () => {
 
         <SectionText.Paragraph>
           <div className="space-y-4 flex flex-col justify-center items-center">
-            <ol className="text-justify list-disc">
+            <ol className="text-justify list-disc px-6 md:px-0">
               <li>Discover — Understand your goals and constraints</li>
               <li>Define — Shape the right solution</li>
               <li>Design — Clean, usable, intentional interfaces</li>

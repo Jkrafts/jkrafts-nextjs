@@ -15,8 +15,12 @@ const ProjectsRoot = () => {
 
   const storySliderRef = useRef<StorySliderHandle | null>(null);
 
+  const projectImage = (): string => {
+    return 'https://picsum.photos/200';
+  }
+
   return (
-    <div className="h-svh flex flex-col justify-center items-center">
+    <div className="h-svh pt-28 lg:pt-0 flex flex-col justify-center items-center">
 
       <div className="mb-12 text-center select-none">
         <h1 className="text-4xl md:text-6xl lg:text-7xl font-heading font-extrabold text-text z-10">
@@ -37,23 +41,31 @@ const ProjectsRoot = () => {
               nextEl: '.projects-next',
               prevEl: '.projects-prev',
             }}
+            breakpoints={{
+              0: {
+                slidesPerView: 'auto',
+              },
+              1024: {
+                slidesPerView: 5,
+              }
+            }}
             scrollbar={{ 
               el: '.swiper-projects-scrollbar',
               draggable: true 
             }}
             modules={[Navigation,Scrollbar]}
-            className="pb-8! px-4!"
+            className="pb-8! px-4! overflow-auto! project-stories-swiper"
           >
 
             {projects.map((project, index) => (
               <SwiperSlide
                 key={index}
                 onClick={() => storySliderRef.current?.open(index)}
-                className="cursor-target w-60 shrink-0 flex flex-col gap-4 justify-center items-center cursor-pointer select-none"
+                className="cursor-target w-60! shrink-0 flex! flex-col gap-4 justify-center items-center cursor-pointer select-none"
               >
                 <div className="p-4 h-32 w-32 mx-auto border rounded-full text-center project-stories-avatar">
                   <Image 
-                    src={'https://picsum.photos/200'} 
+                    src={projectImage()} 
                     alt={project.title} 
                     width={128} 
                     height={128} 

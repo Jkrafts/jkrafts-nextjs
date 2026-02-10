@@ -79,7 +79,7 @@ const ContactForm = () => {
 
         <div className="mt-12">
           <h2 className="text-text text-base font-semibold">Socials</h2>
-          <ul className="flex mt-4 space-x-4">
+          <ul className="flex justify-between md:justify-start mt-4 space-x-4">
             <li className="cursor-target bg-pf-icon-surface h-10 w-10 rounded-full flex items-center justify-center shrink-0">
               <a href="https://www.github.com/mfalm3">
                 <Icon name="github" alt="Github Icon" size={28} />

@@ -49,7 +49,7 @@ export default function Hero() {
   }, []);
 
   return (
-    <section className="relative min-h-screen overflow-hidden px-6 bg-base">
+    <section className="relative min-h-screen overflow-hidden bg-base">
       {/* Background Animated Plasma */}
       <Plasma
         color="#b19eef"
@@ -59,12 +59,12 @@ export default function Hero() {
         opacity={0.8}
       />
 
-      <div className="absolute inset-0">
+      <div className="absolute inset-0 px-6 md:px-0">
         <div className="flex flex-col items-center justify-center h-full relative z-10">
           {/* Hero Content */}
           <h1
             ref={headlineRef}
-            className="text-4xl md:text-6xl lg:text-7xl font-heading font-extrabold text-text z-10"
+            className="text-4xl md:text-6xl lg:text-7xl font-heading font-extrabold text-text text-center z-10"
           >
             Your Online Presence Redefined
           </h1>
