@@ -113,47 +113,51 @@ const ContactForm = () => {
         <input
           placeholder="Name"
           {...register("name", { required: true })}
+          aria-invalid={errors.name ? "true" : "false"}
           className="w-full text-text rounded-md py-2.5 px-4 border border-gray-300 text-sm outline-0 focus:border-blue-500"
         />
         {errors.name && (
-          <p className="text-red-500 text-xs">Name is required</p>
+          <p role="alert" className="text-red-500 text-xs">Name is required</p>
         )}
 
         <input
           type="email"
           placeholder="Email"
+          aria-invalid={errors.email ? "true" : "false"}
           {...register("email", { required: true })}
           className="w-full text-text rounded-md py-2.5 px-4 border border-gray-300 text-sm outline-0 focus:border-blue-500"
         />
         {errors.email && (
-          <p className="text-red-500 text-xs">Email is required</p>
+          <p role="alert" className="text-red-500 text-xs">Email is required</p>
         )}
 
         <input
           placeholder="Subject"
+          aria-invalid={errors.subject ? "true" : "false"}
           {...register("subject", { required: true })}
           className="w-full text-text rounded-md py-2.5 px-4 border border-gray-300 text-sm outline-0 focus:border-blue-500"
         />
         {errors.subject && (
-          <p className="text-red-500 text-xs">Subject is required</p>
+          <p role="alert" className="text-red-500 text-xs">Subject is required</p>
         )}
 
         <textarea
           rows={6}
           placeholder="Message"
+          aria-invalid={errors.message ? "true" : "false"}
           {...register("message", { required: true })}
           className="w-full text-text rounded-md px-4 border border-gray-300 text-sm pt-2.5 outline-0 focus:border-blue-500"
         />
         {errors.message && (
-          <p className="text-red-500 text-xs">Message is required</p>
+          <p role="alert" className="text-red-500 text-xs">Message is required</p>
         )}
 
         {serverError && (
-          <p className="text-red-600 text-sm">{serverError}</p>
+          <p role="alert" className="text-red-600 text-sm">{serverError}</p>
         )}
 
         {success && (
-          <p className="text-green-600 text-sm">
+          <p role="alert" className="text-green-600 text-sm">
             Message sent successfully!
           </p>
         )}
