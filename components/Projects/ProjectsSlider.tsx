@@ -102,7 +102,7 @@ const ProjectsSlider = forwardRef<StorySliderHandle, StorySliderProps>(
                   subtitle={projectSlides.shortTagline}
                   accentColor={projectSlides.accentColor}
                   category={projectSlides.category}
-                  duration={600000}
+                  duration={5000}
                   closeButton
                   onClose={close}
                 >
