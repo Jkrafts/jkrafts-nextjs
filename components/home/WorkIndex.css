@@ -1,0 +1,145 @@
+.work-index {
+  border-top: 1px solid var(--line-strong);
+}
+
+.work-index > li {
+  border-bottom: 1px solid var(--line);
+}
+
+.work-row {
+  --accent: var(--violet);
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: 1fr;
+  column-gap: 1rem;
+  row-gap: 0.5rem;
+  align-items: baseline;
+  padding: 1.5rem 0.75rem;
+  margin-inline: -0.75rem;
+  border-radius: var(--radius);
+  transition: color 250ms var(--ease-out);
+}
+
+.work-row-fill {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--accent);
+  overflow: hidden;
+  border-radius: inherit;
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform 450ms var(--ease-out);
+}
+
+/* The project's pattern shows at the row's far end, away from the title and
+   description (the category label there is short). */
+.work-row-fill::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: var(--pattern, none);
+  background-size: var(--pattern-size);
+  -webkit-mask-image: linear-gradient(90deg, transparent 55%, #000 92%);
+  mask-image: linear-gradient(90deg, transparent 55%, #000 92%);
+}
+
+.work-row-swatch {
+  display: inline-block;
+  width: 0.45em;
+  height: 0.45em;
+  margin-right: 0.6em;
+  vertical-align: 0.12em;
+  background: var(--accent);
+  transition: background-color 250ms var(--ease-out);
+}
+
+
+
+.work-row-desc {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  color: var(--ink-muted);
+  transition: color 250ms var(--ease-out);
+}
+
+.work-row-skills {
+  color: var(--ink-muted);
+  transition: color 250ms var(--ease-out);
+}
+
+.work-row-meta {
+  color: var(--ink-muted);
+  transition: color 250ms var(--ease-out);
+}
+
+@media (min-width: 768px) {
+  .work-row {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 4fr) minmax(0, 1.5fr);
+    column-gap: 1.5rem;
+    padding-block: 2rem;
+  }
+
+  .work-row-meta {
+    text-align: right;
+  }
+}
+
+/* Hover/focus: flood the row with the project's colour. Accent colours are
+   all deep enough for white text (WCAG AA). */
+@media (hover: hover) {
+  .work-row:hover .work-row-fill {
+    transform: scaleY(1);
+    transform-origin: top;
+  }
+
+  .work-row:hover,
+  .work-row:hover .work-row-desc,
+  .work-row:hover .work-row-skills,
+  .work-row:hover .work-row-meta {
+    color: #fff;
+  }
+
+  .work-row:hover .work-row-swatch {
+    background: #fff;
+  }
+}
+
+.work-row:focus-visible .work-row-fill {
+  transform: scaleY(1);
+}
+
+.work-row:focus-visible,
+.work-row:focus-visible .work-row-desc,
+.work-row:focus-visible .work-row-skills,
+.work-row:focus-visible .work-row-meta {
+  color: #fff;
+}
+
+.work-row:focus-visible .work-row-swatch {
+  background: #fff;
+}
+
+/* The copy of a row carried by the story transition (lib/storyTransition):
+   always shown in its flooded state. */
+.work-row[data-lifted] {
+  color: #fff;
+  pointer-events: none;
+}
+
+.work-row[data-lifted] .work-row-fill {
+  transform: none;
+  transition: none;
+}
+
+.work-row[data-lifted] .work-row-desc,
+.work-row[data-lifted] .work-row-skills,
+.work-row[data-lifted] .work-row-meta {
+  color: #fff;
+}
+
+.work-row[data-lifted] .work-row-swatch {
+  background: #fff;
+}

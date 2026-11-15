@@ -1,0 +1,221 @@
+/* Let tiles run off the right edge of the content column: it signals that
+   the row scrolls. The page itself clips horizontal overflow. */
+.projects-swiper.swiper {
+  overflow: visible;
+}
+
+.story-tile {
+  --accent: var(--violet);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 4 / 5;
+  padding: 1.25rem;
+  text-align: left;
+  color: #fff;
+  background: var(--accent);
+  border-radius: var(--radius);
+  overflow: hidden;
+  isolation: isolate;
+  cursor: pointer;
+  transition: transform 450ms var(--ease-out);
+}
+
+/* The project's pattern, as on its story's cover (see stories-slide.css). */
+.story-tile::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-image: var(--pattern, none);
+  background-size: var(--pattern-size);
+  -webkit-mask-image: var(--pattern-mask);
+  mask-image: var(--pattern-mask);
+  pointer-events: none;
+}
+
+.story-tile:focus-visible {
+  outline-offset: 4px;
+}
+
+/* One bar per chapter, previewing the story format; they fill on hover. */
+.story-tile-bars {
+  display: flex;
+  gap: 3px;
+}
+
+.story-tile-bars span {
+  position: relative;
+  flex: 1;
+  height: 2px;
+  background: rgb(255 255 255 / 0.35);
+  overflow: hidden;
+}
+
+.story-tile-bars span::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #fff;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 300ms var(--ease-out);
+}
+
+.story-tile:hover .story-tile-bars span::after,
+.story-tile:focus-visible .story-tile-bars span::after {
+  transform: scaleX(1);
+}
+
+.story-tile-bars span:nth-child(2)::after { transition-delay: 60ms; }
+.story-tile-bars span:nth-child(3)::after { transition-delay: 120ms; }
+.story-tile-bars span:nth-child(4)::after { transition-delay: 180ms; }
+.story-tile-bars span:nth-child(5)::after { transition-delay: 240ms; }
+
+.story-tile-category {
+  margin-top: 0.875rem;
+  color: #fff;
+}
+
+.story-tile-monogram {
+  position: absolute;
+  right: -0.06em;
+  top: 22%;
+  font-size: clamp(7rem, 16vw, 10rem);
+  line-height: 0.8;
+  letter-spacing: -0.06em;
+  font-weight: 700;
+  font-variation-settings: "wdth" 75, "opsz" 96;
+  color: rgb(255 255 255 / 0.16);
+  pointer-events: none;
+  user-select: none;
+  transition: transform 600ms var(--ease-out);
+}
+
+.story-tile:hover .story-tile-monogram {
+  transform: translateX(-0.08em);
+}
+
+.story-tile-body {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: auto;
+}
+
+.story-tile-title {
+  font-size: clamp(1.375rem, 2vw, 1.75rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  font-weight: 600;
+  font-variation-settings: "wdth" 85, "opsz" 32;
+  text-wrap: balance;
+}
+
+.story-tile-tagline {
+  font-size: 0.9375rem;
+  line-height: 1.45;
+  color: #fff;
+}
+
+.story-tile-cta {
+  align-self: flex-start;
+  margin-top: 0.75rem;
+  padding-bottom: 2px;
+  font-weight: 500;
+  border-bottom: 1px solid rgb(255 255 255 / 0.6);
+  transition: border-color 200ms var(--ease-out);
+}
+
+.story-tile:hover .story-tile-cta {
+  border-bottom-color: #fff;
+}
+
+/* --- Row controls --------------------------------------------------------- */
+
+.projects-nav {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  color: var(--ink);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  transition:
+    background-color 200ms var(--ease-out),
+    color 200ms var(--ease-out),
+    opacity 200ms var(--ease-out);
+}
+
+.projects-nav:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.projects-nav.swiper-button-disabled {
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+.projects-nav.swiper-button-lock {
+  display: none;
+}
+
+.projects-scrollbar {
+  position: relative;
+  height: 2px;
+  margin-top: 1.75rem;
+  background: var(--line);
+  touch-action: none;
+}
+
+.projects-scrollbar .swiper-scrollbar-drag {
+  position: relative;
+  height: 100%;
+  background: var(--ink);
+  cursor: grab;
+}
+
+.projects-scrollbar.swiper-scrollbar-lock {
+  display: none;
+}
+
+/* Before Swiper initialises (server-rendered HTML, until hydration), slides
+   would fall back to full width and then snap to card size. Reproduce
+   Swiper's own sizing here so the first paint already matches:
+   width = (container - (slidesPerView - 1) * spaceBetween) / slidesPerView.
+   Keep these in step with the `slidesPerView`/`spaceBetween` breakpoints in
+   ProjectsRoot.tsx (Swiper's breakpoints are window widths, like these). */
+.projects-swiper:not(.swiper-initialized) {
+  --pre-spv: 1.2;
+  --pre-gap: 16px;
+}
+
+.projects-swiper:not(.swiper-initialized) .swiper-slide {
+  width: calc((100% - (var(--pre-spv) - 1) * var(--pre-gap)) / var(--pre-spv));
+  margin-right: var(--pre-gap);
+}
+
+@media (min-width: 560px) {
+  .projects-swiper:not(.swiper-initialized) {
+    --pre-spv: 2.2;
+  }
+}
+
+@media (min-width: 900px) {
+  .projects-swiper:not(.swiper-initialized) {
+    --pre-spv: 3.2;
+    --pre-gap: 20px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .projects-swiper:not(.swiper-initialized) {
+    --pre-spv: 4.2;
+    --pre-gap: 24px;
+  }
+}

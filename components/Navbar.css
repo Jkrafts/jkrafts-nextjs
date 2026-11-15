@@ -1,0 +1,296 @@
+/* ---------------------------------------------------------------------------
+   Header
+   --------------------------------------------------------------------------- */
+
+.site-header {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 60;
+  height: var(--header-h);
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid transparent;
+  transition:
+    background-color 250ms var(--ease-out),
+    border-color 250ms var(--ease-out);
+}
+
+.site-header[data-scrolled] {
+  background-color: var(--paper);
+  border-bottom-color: var(--line);
+}
+
+.site-header-wrapper[data-open] .site-header {
+  border-bottom-color: transparent;
+}
+
+.site-header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+.site-logo {
+  display: block;
+  flex: none;
+  border-radius: 6px;
+}
+
+.site-logo-img {
+  display: block;
+  height: 2.5rem;
+  width: auto;
+}
+
+.site-nav {
+  position: relative;
+  display: none;
+  margin-left: auto;
+}
+
+.site-nav ul {
+  display: flex;
+  gap: 2.25rem;
+}
+
+.site-nav-link {
+  position: relative;
+  display: inline-block;
+  padding-block: 0.5rem;
+  font-weight: 500;
+  font-size: 1rem;
+}
+
+/* Underline indicator: grows on hover, stays for the current page so the
+   state is not communicated through colour alone. */
+.site-nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0.2rem;
+  height: 2px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 300ms var(--ease-out);
+}
+
+.site-nav-link:hover::after,
+.site-nav-link[aria-current="page"]::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* The page transition slides one underline from the current link to the next
+   (lib/pageTransition.ts); the links' own underlines step aside meanwhile. */
+.site-nav-indicator {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 2px;
+  background: currentColor;
+  pointer-events: none;
+}
+
+.site-nav.is-moving .site-nav-link::after {
+  opacity: 0;
+  transition: none;
+}
+
+/* While the page transition's curtain is behind the header: no page-coloured
+   bar, and white text over the indigo. */
+.site-header :is(.site-nav-link, .menu-toggle, button) {
+  transition: color 300ms var(--ease-out);
+}
+
+html.pt-header .site-header {
+  color: #fff;
+  background-color: transparent;
+  border-bottom-color: transparent;
+}
+
+html.pt-header .site-header :is(.site-nav, .site-nav-link, .menu-toggle, button) {
+  color: #fff;
+}
+
+.site-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.menu-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  min-height: 2.75rem;
+  padding: 0 0.25rem 0 0.5rem;
+  font-weight: 500;
+  color: var(--ink);
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+.menu-toggle-text {
+  min-width: 2.75rem;
+  text-align: right;
+}
+
+.menu-toggle-icon {
+  position: relative;
+  width: 1.25rem;
+  height: 0.75rem;
+}
+
+.menu-toggle-icon span {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: currentColor;
+  transition:
+    transform 350ms var(--ease-out),
+    top 350ms var(--ease-out);
+}
+
+.menu-toggle-icon span:first-child {
+  top: 0;
+}
+
+.menu-toggle-icon span:last-child {
+  top: calc(100% - 2px);
+}
+
+.site-header-wrapper[data-open] .menu-toggle-icon span:first-child {
+  top: calc(50% - 1px);
+  transform: rotate(45deg);
+}
+
+.site-header-wrapper[data-open] .menu-toggle-icon span:last-child {
+  top: calc(50% - 1px);
+  transform: rotate(-45deg);
+}
+
+@media (min-width: 768px) {
+  .site-nav {
+    display: block;
+  }
+
+  .menu-toggle {
+    display: none;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Mobile menu panel
+   --------------------------------------------------------------------------- */
+
+.menu-layers {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  pointer-events: none;
+}
+
+/* Hidden until the open timeline runs; GSAP owns the transform (a CSS
+   translate here would be read by GSAP as an extra pixel offset). */
+.menu-layer {
+  position: absolute;
+  inset: 0;
+  visibility: hidden;
+}
+
+.menu-layer-1 {
+  background: var(--lilac);
+}
+
+.menu-layer-2 {
+  background: var(--violet);
+}
+
+.menu-panel {
+  position: fixed;
+  inset: 0;
+  z-index: 55;
+  display: flex;
+  background: var(--paper);
+  padding-top: var(--header-h);
+  visibility: hidden;
+  overflow-y: auto;
+}
+
+.menu-panel-inner {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 3rem;
+  padding-block: 2rem 2.5rem;
+  min-height: 100%;
+}
+
+.menu-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.menu-item {
+  overflow: hidden;
+  border-bottom: 1px solid var(--line);
+}
+
+.menu-item-link {
+  display: block;
+  padding-block: 0.75rem 0.5rem;
+}
+
+.menu-item-label {
+  display: block;
+  font-size: clamp(2.75rem, 14vw, 5rem);
+  line-height: 1;
+  letter-spacing: -0.04em;
+  font-weight: 600;
+  font-variation-settings: "wdth" 75, "opsz" 96;
+  will-change: transform;
+}
+
+.menu-item-link[aria-current="page"] .menu-item-label {
+  color: var(--violet);
+}
+
+.menu-item-link[aria-current="page"] .menu-item-label::after {
+  content: "";
+  display: inline-block;
+  width: 0.18em;
+  height: 0.18em;
+  margin-left: 0.2em;
+  vertical-align: 0.6em;
+  background: currentColor;
+}
+
+.menu-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.menu-socials {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+}
+
+.menu-social {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 2.75rem;
+  color: var(--ink-muted);
+  transition: color 200ms var(--ease-out);
+}
+
+.menu-social:hover {
+  color: var(--ink);
+}

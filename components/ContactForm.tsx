@@ -1,8 +1,9 @@
 "use client";
 
+import { useEffect, useId, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useState } from "react";
-import Icon from "./Icon";
+import { contact } from "@/lib/site";
+import { projects } from "@/data/projects";
 
 interface IFormInput {
   name: string;
@@ -11,166 +12,179 @@ interface IFormInput {
   message: string;
 }
 
+type Status = { kind: "idle" } | { kind: "sent" } | { kind: "error"; message: string };
+
+const fallbackError = `Your message couldn’t be sent. Try again, or email ${contact.email} directly.`;
+
+// The site is a static export, so the form posts straight to the Laravel API
+// (which must allow this origin via CORS). Set at build time.
+const CONTACT_ENDPOINT = process.env.NEXT_PUBLIC_LARAVEL_API_URL
+  ? `${process.env.NEXT_PUBLIC_LARAVEL_API_URL.replace(/\/$/, "")}/contact`
+  : null;
+
+// Laravel validation failures arrive as `{ message, errors }`; the
+// `{ error: { message } }` shape is also accepted.
+function readError(result: unknown): string {
+  if (!result || typeof result !== "object") return fallbackError;
+  const r = result as { error?: unknown; message?: unknown };
+  if (r.error && typeof r.error === "object" && "message" in r.error) {
+    const m = (r.error as { message?: unknown }).message;
+    if (typeof m === "string" && m.trim()) return m;
+  }
+  if (typeof r.message === "string" && r.message.trim()) return r.message;
+  return fallbackError;
+}
+
 const ContactForm = () => {
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors, isSubmitting },
-  } = useForm<IFormInput>();
+    setValue,
+    getValues,
+    setFocus,
+  } = useForm<IFormInput>({ shouldFocusError: true });
 
-  const [serverError, setServerError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
+  const [status, setStatus] = useState<Status>({ kind: "idle" });
+  const id = useId();
+
+  // Arriving from a project story's "Start a similar project"
+  // (/contact?project=<id>#project-form): name the project in the subject
+  // and put the cursor in the first field, ready to write.
+  useEffect(() => {
+    const projectId = new URLSearchParams(window.location.search).get("project");
+    const project = projects.find((p) => p.id === projectId);
+    if (!project) return;
+    if (!getValues("subject")) setValue("subject", `A project like ${project.title}`);
+    // The page has already scrolled to the form, so this is in view.
+    requestAnimationFrame(() => setFocus("name"));
+  }, [getValues, setValue, setFocus]);
 
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
-    setServerError(null);
-    setSuccess(false);
-
+    setStatus({ kind: "idle" });
+    if (!CONTACT_ENDPOINT) {
+      setStatus({ kind: "error", message: fallbackError });
+      return;
+    }
     try {
-      const res = await fetch("/api/contact", {
+      const res = await fetch(CONTACT_ENDPOINT, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
         body: JSON.stringify(data),
       });
-
-      const result = await res.json();
-
+      const result = await res.json().catch(() => null);
       if (!res.ok) {
-        throw result;
+        setStatus({ kind: "error", message: readError(result) });
+        return;
       }
-
-      setSuccess(true);
+      setStatus({ kind: "sent" });
       reset();
-    } catch (error: any) {
-      setServerError(
-        error?.message || "Something went wrong. Please try again."
-      );
+    } catch {
+      setStatus({ kind: "error", message: fallbackError });
     }
   };
 
+  const fieldProps = (name: keyof IFormInput) => ({
+    id: `${id}-${name}`,
+    "aria-invalid": errors[name] ? true : undefined,
+    "aria-describedby": errors[name] ? `${id}-${name}-error` : undefined,
+  });
+
+  const fieldError = (name: keyof IFormInput) =>
+    errors[name] ? (
+      <p id={`${id}-${name}-error`} className="field-error">
+        {errors[name]?.message}
+      </p>
+    ) : null;
+
   return (
-    <div className="grid lg:grid-cols-2 items-start gap-12 p-8 mx-auto max-w-4xl max-lg:max-w-2xl bg-base [box-shadow:0_2px_10px_-3px_rgba(6,81,237,0.3)] rounded-md">
-      <div>
-        <h2 className="text-text text-3xl font-bold">Let&apos;s Talk</h2>
-        <p className="text-[15px] text-slate-600 mt-4 leading-relaxed">
-          Have some big idea or brand to develop and need help? Then reach out
-          we&apos;d love to hear about your project and provide help.
-        </p>
+    <form id="contact-form" noValidate onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
+      <div className="grid gap-6 sm:grid-cols-2">
+        <div>
+          <label htmlFor={`${id}-name`} className="field-label">
+            Name
+          </label>
+          <input
+            {...fieldProps("name")}
+            {...register("name", { required: "Enter your name." })}
+            autoComplete="name"
+            className="field"
+          />
+          {fieldError("name")}
+        </div>
 
-        <div className="mt-12">
-          <h2 className="text-text text-base font-semibold">Email</h2>
-          <ul className="mt-4">
-            <li className="flex items-center">
-              <div className="bg-pf-icon-surface h-10 w-10 rounded-full flex items-center justify-center shrink-0">
-                <Icon name="email" alt="Mail Icon" size={28} />
-              </div>
-              <a
-                href="mailto:info@jkrafts.com"
-                className="text-sm text-[rgb(var(--color-primary))]! hover:text-[rgb(var(--color-secondary))]! ml-4 cursor-target"
-              >
-                <small className="block text-text">Mail</small>
-                <span className="font-medium">info@jkrafts.com</span>
-              </a>
-            </li>
-          </ul>
-          </div>
-
-        <div className="mt-12">
-          <h2 className="text-text text-base font-semibold">Socials</h2>
-          <ul className="flex justify-between md:justify-start mt-4 space-x-4">
-            <li className="cursor-target bg-pf-icon-surface h-10 w-10 rounded-full flex items-center justify-center shrink-0">
-              <a href="https://www.github.com/mfalm3">
-                <Icon name="github" alt="Github Icon" size={28} />
-              </a>
-            </li>
-            <li className="cursor-target bg-pf-icon-surface h-10 w-10 rounded-full flex items-center justify-center shrink-0">
-              <a href="https://www.linkedin.com/in/joe-waithaka/">
-                <Icon name="linkedin" alt="LinkedIn Icon" size={28} />
-              </a>
-            </li>
-            <li className="cursor-target bg-pf-icon-surface h-10 w-10 rounded-full flex items-center justify-center shrink-0">
-              <a href="https://www.facebook.com/jkrafts7">
-                <Icon name="facebook" alt="FaceBook Icon" size={28} />
-              </a>
-            </li>
-            <li className="cursor-target bg-pf-icon-surface h-10 w-10 rounded-full flex items-center justify-center shrink-0">
-              <a href="https://x.com/_mfalm3">
-                <Icon name="x" alt="X(Formerly Twitter) Icon" size={28} />
-              </a>
-            </li>
-          </ul>
+        <div>
+          <label htmlFor={`${id}-email`} className="field-label">
+            Email
+          </label>
+          <input
+            {...fieldProps("email")}
+            {...register("email", {
+              required: "Enter your email address so I can reply.",
+              pattern: {
+                value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                message: "Enter an email address in the format name@example.com.",
+              },
+            })}
+            type="email"
+            autoComplete="email"
+            inputMode="email"
+            className="field"
+          />
+          {fieldError("email")}
         </div>
       </div>
 
-      {/* FORM */}
-      <form
-        id="contact"
-        className="space-y-4"
-        onSubmit={handleSubmit(onSubmit)}
-      >
+      <div>
+        <label htmlFor={`${id}-subject`} className="field-label">
+          Subject
+        </label>
         <input
-          placeholder="Name"
-          {...register("name", { required: true })}
-          aria-invalid={errors.name ? "true" : "false"}
-          className="w-full text-text rounded-md py-2.5 px-4 border border-gray-300 text-sm outline-0 focus:border-blue-500"
+          {...fieldProps("subject")}
+          {...register("subject", { required: "Add a subject, for example “New website”." })}
+          className="field"
         />
-        {errors.name && (
-          <p role="alert" className="text-red-500 text-xs">Name is required</p>
-        )}
+        {fieldError("subject")}
+      </div>
 
-        <input
-          type="email"
-          placeholder="Email"
-          aria-invalid={errors.email ? "true" : "false"}
-          {...register("email", { required: true })}
-          className="w-full text-text rounded-md py-2.5 px-4 border border-gray-300 text-sm outline-0 focus:border-blue-500"
-        />
-        {errors.email && (
-          <p role="alert" className="text-red-500 text-xs">Email is required</p>
-        )}
-
-        <input
-          placeholder="Subject"
-          aria-invalid={errors.subject ? "true" : "false"}
-          {...register("subject", { required: true })}
-          className="w-full text-text rounded-md py-2.5 px-4 border border-gray-300 text-sm outline-0 focus:border-blue-500"
-        />
-        {errors.subject && (
-          <p role="alert" className="text-red-500 text-xs">Subject is required</p>
-        )}
-
+      <div>
+        <label htmlFor={`${id}-message`} className="field-label">
+          Message
+        </label>
         <textarea
-          rows={6}
-          placeholder="Message"
-          aria-invalid={errors.message ? "true" : "false"}
-          {...register("message", { required: true })}
-          className="w-full text-text rounded-md px-4 border border-gray-300 text-sm pt-2.5 outline-0 focus:border-blue-500"
+          {...fieldProps("message")}
+          {...register("message", { required: "Tell me a little about your project." })}
+          rows={7}
+          placeholder="What are you building, and what would you like help with?"
+          className="field resize-y"
         />
-        {errors.message && (
-          <p role="alert" className="text-red-500 text-xs">Message is required</p>
-        )}
+        {fieldError("message")}
+      </div>
 
-        {serverError && (
-          <p role="alert" className="text-red-600 text-sm">{serverError}</p>
-        )}
-
-        {success && (
-          <p role="alert" className="text-green-600 text-sm">
-            Message sent successfully!
-          </p>
-        )}
-
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="cta w-full mt-2 cursor-target disabled:opacity-60"
-        >
-          {isSubmitting ? "Sending..." : "Send message"}
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <button type="submit" disabled={isSubmitting} className="btn btn-primary sm:min-w-48">
+          {isSubmitting ? "Sending…" : "Send message"}
         </button>
-      </form>
-    </div>
+
+        <div role="status" aria-live="polite" className="t-small">
+          {status.kind === "sent" && (
+            <p className="flex items-center gap-2 text-success">
+              <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="m5 12.5 4.5 4.5L19 7.5" fill="none" stroke="currentColor" strokeWidth="2.2" />
+              </svg>
+              Message sent. I’ll get back to you shortly.
+            </p>
+          )}
+        </div>
+      </div>
+
+      {status.kind === "error" && (
+        <p role="alert" className="border-l-2 border-danger pl-4 text-danger">
+          {status.message}
+        </p>
+      )}
+    </form>
   );
 };
 

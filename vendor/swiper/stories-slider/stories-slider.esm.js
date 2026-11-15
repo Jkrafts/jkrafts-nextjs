@@ -10,6 +10,13 @@
  * Released under the UI Initiative Regular License
  *
  * Released on: September 12, 2024
+ *
+ * Local modification (jkrafts): a `lockStory` option. When set, a story
+ * never moves on to the next/previous story: autoplay stops on its last
+ * slide (it stays open until closed, and `onComplete` is called when that
+ * slide's time is up), tapping past the last slide calls
+ * `onEnd`, tapping back on its first slide does nothing, and swiping
+ * between stories is disabled.
  */
 
 /* eslint-disable no-shadow */
@@ -25,6 +32,8 @@ export default function createStoriesSlider(el, params = {}) {
     onAutoplayStart,
     onAutoplayStop,
     onEnd,
+    onComplete,
+    lockStory = false,
   } = params;
   let { enabled = true } = params;
 
@@ -87,6 +96,11 @@ export default function createStoriesSlider(el, params = {}) {
         swiper.slideNext();
       } else {
         if (activeSubSwiperIndex !== subSwiperIndex) {
+          return;
+        }
+        // Locked: stay on the last slide until the viewer closes it.
+        if (lockStory) {
+          if (onComplete) onComplete();
           return;
         }
         if (!mainSwiper.isEnd) {
@@ -310,6 +324,7 @@ export default function createStoriesSlider(el, params = {}) {
       effect: 'cube',
       speed: 500,
       threshold: 5,
+      allowTouchMove: !lockStory,
       cubeEffect: {
         shadow: false,
       },
@@ -398,7 +413,7 @@ export default function createStoriesSlider(el, params = {}) {
       const onNavLeftClick = () => {
         if (touchHoldDuration > 200) return;
         if (swiper.isBeginning) {
-          mainSwiper.slidePrev();
+          if (!lockStory) mainSwiper.slidePrev();
           return;
         }
         swiper.slidePrev();
@@ -406,7 +421,9 @@ export default function createStoriesSlider(el, params = {}) {
       const onNavRightClick = () => {
         if (touchHoldDuration > 200) return;
         if (swiper.isEnd) {
-          mainSwiper.slideNext();
+          if (lockStory) {
+            if (onEnd) onEnd();
+          } else mainSwiper.slideNext();
           return;
         }
         swiper.slideNext();

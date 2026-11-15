@@ -1,6 +1,6 @@
-import type { Metadata } from "next";
-import { Inter, Manrope, Instrument_Serif, Space_Grotesk } from "next/font/google";
-import { GoogleTagManager } from '@next/third-parties/google'
+import type { Metadata, Viewport } from "next";
+import { Bricolage_Grotesque } from "next/font/google";
+import { GoogleTagManager, GoogleAnalytics } from "@next/third-parties/google";
 import ThemeProvider from "@/src/theme-provider";
 import TargetCursor from "@/components/TargetCursor";
 import { siteConfig } from "@/lib/seo";
@@ -8,8 +8,11 @@ import { siteConfig } from "@/lib/seo";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Jkrafts",
-  description: "JKrafts is a creative web developer crafting modern, high-performance digital experiences with clean design and thoughtful interactions.",
+  title: {
+    default: "Jkrafts — Websites and web systems, crafted to last",
+    template: "%s — Jkrafts",
+  },
+  description: siteConfig.description,
   metadataBase: new URL(siteConfig.url),
   openGraph: {
     title: siteConfig.name,
@@ -34,31 +37,26 @@ export const metadata: Metadata = {
   },
 };
 
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f1f0f6" },
+    { media: "(prefers-color-scheme: dark)", color: "#0d0b22" },
+  ],
+};
 
-const interFont = Inter({ 
-  subsets: ["latin"], 
-  variable: "--font-inter", 
-  fallback: ["sans-serif"],
+// One variable family carries the whole identity. The width (wdth) and
+// optical size (opsz) axes let display headings run narrow and tight while
+// body copy stays at full width.
+const bricolage = Bricolage_Grotesque({
+  subsets: ["latin"],
+  variable: "--font-bricolage",
+  axes: ["opsz", "wdth"],
+  display: "swap",
 });
 
-const manropeFont = Manrope({ 
-  subsets: ["latin"], 
-  variable: "--font-manrope",
-  fallback: ["sans-serif"],
-});
-
-const instrumentSerifFont = Instrument_Serif({ 
-  weight: "400", 
-  subsets: ["latin"], 
-  variable: "--font-instrument-serif",
-  fallback: ["serif"]
-});
-
-const spaceGroteskFont = Space_Grotesk({ 
-  subsets: ["latin"], 
-  variable: "--font-space-grotesk",
-  fallback: ["serif"]
-});
+// Runs before first paint: lets CSS hide elements that GSAP will animate in,
+// without hiding them for visitors who have JavaScript disabled.
+const jsFlag = `document.documentElement.classList.add('js')`;
 
 export default function RootLayout({
   children,
@@ -66,22 +64,28 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning className={`${interFont.variable} ${manropeFont.variable} ${instrumentSerifFont.variable} ${spaceGroteskFont.variable}`}>
+    <html lang="en" suppressHydrationWarning className={bricolage.variable}>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: jsFlag }} />
+      </head>
+      {/*
+        GTM-* is a Tag Manager container id; G-* is a GA4 Measurement id.
+        Mounting <GoogleTagManager> twice produced two elements with the same
+        id (`_next-gtm`), so the GA4 id uses <GoogleAnalytics> instead.
+      */}
       <GoogleTagManager gtmId="GTM-PXL6NLM5" />
-      <GoogleTagManager gtmId="G-8YGCX4RECJ" />
-      <body className="antialiased container_ pattern-dotted overflow-x-clip">
-        
+      <GoogleAnalytics gaId="G-8YGCX4RECJ" />
+      <body className="overflow-x-clip">
+        <a href="#main" className="skip-link">
+          Skip to content
+        </a>
         <ThemeProvider
           attribute="class"
           defaultTheme="light"
           enableSystem={false}
-          disableTransitionOnChange={false}
+          disableTransitionOnChange
         >
-          <TargetCursor
-            spinDuration={2}
-            parallaxOn
-            hoverDuration={0.2}
-          />
+          <TargetCursor />
           {children}
         </ThemeProvider>
       </body>

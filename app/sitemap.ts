@@ -1,5 +1,8 @@
 import { MetadataRoute } from "next";
 
+// Generated once at build time (required by the static export).
+export const dynamic = "force-static";
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = "https://jkrafts.com";
 

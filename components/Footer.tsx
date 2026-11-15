@@ -1,37 +1,60 @@
-'use client';
-import { useLayoutEffect, useRef } from "react";
+import CursorLink from "@/components/TargetCursor/CursorLink";
+import Icon from "@/components/Icon";
+import { contact, navItems, socials } from "@/lib/site";
 
-const Footer = () => {
-
-  const footerRef = useRef<HTMLElement | null>(null);
-
-  useLayoutEffect(() => {
-    const footer = footerRef.current;
-    if (!footer) return;
-
-    const ro = new ResizeObserver(entries => {
-      const entry = entries[0];
-      document.documentElement.style.setProperty(
-        "--footer-height",
-        `${entry.contentRect.height}px`
-      );
-    });
-
-    ro.observe(footer);
-
-    return () => ro.disconnect();
-  }, []);
+export default function Footer() {
+  const year = new Date().getFullYear();
 
   return (
-    <footer ref={footerRef} className="snap-footer w-full border-t mt-16 py-8 text-center text-sm text-gray-500">
-      <div className="font-heading font-extrabold text-text text-3xl mb-4">
-        Building lasting creations with passion and precision.
-      </div>
-      <div>
-        &copy; {new Date().getFullYear()} Jkrafts. All rights reserved.
+    <footer className="border-t border-line">
+      <div className="shell grid-12 gap-y-12 pt-16 pb-10 md:pt-20">
+        <div className="col-span-4 md:col-span-6">
+          <p className="t-h3 max-w-[22ch]">Building lasting creations with passion and precision.</p>
+          <a href={`mailto:${contact.email}`} className="link mt-6 inline-block text-lg">
+            {contact.email}
+          </a>
+        </div>
+
+        <nav aria-label="Footer" className="col-span-2 md:col-span-2 md:col-start-8">
+          <h2 className="t-small mb-4 text-muted">Pages</h2>
+          <ul className="flex flex-col gap-1">
+            {navItems.map((item) => (
+              <li key={item.href}>
+                <CursorLink href={item.href} className="inline-flex min-h-11 items-center hover:underline">
+                  {item.label}
+                </CursorLink>
+              </li>
+            ))}
+          </ul>
+        </nav>
+
+        <div className="col-span-2 md:col-span-3 md:col-start-10">
+          <h2 className="t-small mb-4 text-muted">Elsewhere</h2>
+          <ul className="flex flex-col gap-1">
+            {socials.map((s) => (
+              <li key={s.href}>
+                <a
+                  href={s.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex min-h-11 items-center gap-2.5 hover:underline"
+                >
+                  <Icon name={s.icon} size={18} />
+                  {s.label}
+                  <span className="sr-only">(opens in a new tab)</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="col-span-4 flex flex-wrap items-center justify-between gap-4 border-t border-line pt-6 t-small text-muted md:col-span-12">
+          <p>&copy; {year} Jkrafts. All rights reserved.</p>
+          <a href="#main" className="inline-flex min-h-11 items-center hover:text-ink hover:underline">
+            Back to top
+          </a>
+        </div>
       </div>
     </footer>
   );
 }
-
-export default Footer;

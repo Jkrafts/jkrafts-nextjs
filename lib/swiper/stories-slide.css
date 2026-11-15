@@ -1,15 +1,9 @@
 /**
- * UI Initiative Stories Slider 1.0.0
+ * Project story viewer.
  *
- * Instagram-like Stories Slider Made With Swiper
- *
- * https://uiinitiative.com
- *
- * Copyright 2022-2024 UI Initiative
- *
- * Released under the UI Initiative Regular License
- *
- * Released on: September 12, 2024
+ * Structural rules are adapted from UI Initiative Stories Slider 1.0.0
+ * (https://uiinitiative.com, UI Initiative Regular License); the visual
+ * layer is specific to this site.
  */
 
 :root {
@@ -18,46 +12,172 @@
   --stories-slider-z-navigation: 200;
   --stories-slider-z-user: 300;
   --stories-slider-z-actions: 300;
-  --stories-slider-z-content: 100;
-  --stories-slider-slide-bg-color: #000;
-  --stories-slider-bg-img: url("../../public/pattern_1.svg");
 }
 
+/* ---------------------------------------------------------------------------
+   Modal shell
+   --------------------------------------------------------------------------- */
+
 .stories-slider {
-  padding-top: 12px;
-  padding-bottom: 12px;
-  box-sizing: border-box;
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
   display: flex;
   align-items: center;
   justify-content: center;
+  box-sizing: border-box;
+  background: #0d0b22;
+  opacity: 0;
+  transform: scale(0.96);
 }
+
+@media (min-width: 415px), (min-height: 897px) {
+  .stories-slider {
+    padding-block: 12px;
+    background: rgb(13 11 34 / 0.96);
+  }
+}
+
+.stories-slider:not(.stories-slider-in) {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.stories-slider:not(.stories-slider-in) * {
+  pointer-events: none !important;
+}
+
+.stories-slider-in {
+  visibility: visible;
+  pointer-events: auto;
+  animation: stories-slider-in 350ms var(--ease-out) forwards;
+}
+
+/* Opened underneath the home page's story transition, which has already
+   done the entrance. */
+.stories-slider-in.stories-slider-instant {
+  animation: none;
+  opacity: 1;
+  transform: none;
+}
+
+.stories-slider-out {
+  visibility: visible;
+  pointer-events: none;
+  animation: stories-slider-out 250ms ease-in forwards !important;
+}
+
+@keyframes stories-slider-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes stories-slider-out {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+}
+
+/* Lock page scroll underneath (Lenis is stopped separately). */
+html.story-open,
+html.story-open body {
+  overflow: hidden;
+}
+
+/* ---------------------------------------------------------------------------
+   Swiper structure (main = cube between projects, nested = chapters)
+   --------------------------------------------------------------------------- */
+
+.stories-slider > .swiper {
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  max-width: 414px;
+  max-height: 860px;
+}
+
+.stories-slider .swiper {
+  height: 100%;
+  width: 100%;
+}
+
 .stories-slider > .swiper > .swiper-wrapper > .swiper-slide:not(.swiper-slide-visible, .swiper-slide-active) {
   opacity: 0;
 }
+
 .stories-slider.stories-slider-animating > .swiper > .swiper-wrapper > .swiper-slide-prev,
 .stories-slider.stories-slider-animating > .swiper > .swiper-wrapper > .swiper-slide-next,
 .stories-slider.stories-slider-animating > .swiper > .swiper-wrapper > .swiper-slide-active {
   opacity: 1;
 }
-.stories-slider .swiper {
-  height: 100%;
-  width: 100%;
-}
+
 .stories-slider .swiper .swiper .swiper-slide {
-  border-radius: 8px;
+  isolation: isolate;
   overflow: hidden;
-  background: var(--stories-slider-bg-img);
+  color: #fff;
+  background-color: #0d0b22;
 }
+
+/* The slide's own surface (see Story.tsx for why it isn't on the slide). */
+.story-surface {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background-color: var(--project-accent);
+  /* A soft fall-off to ink at the bottom keeps body copy readable. */
+  background-image: linear-gradient(180deg, transparent 35%, rgb(13 11 34 / 0.45));
+  pointer-events: none;
+}
+
+@media (min-width: 415px) {
+  .stories-slider .swiper .swiper .swiper-slide {
+    border-radius: var(--radius);
+  }
+}
+
+/* Project pattern (lib/patterns.ts): a darker tone of the accent, so text
+   contrast can only go up. It sits in the top of the frame and fades out
+   before the bottom-aligned copy, so the texture never sits behind text.
+   Each chapter shifts it by whole tiles, so the story has a sense of
+   progression while the pattern stays continuous. */
+.story-surface[data-pattern]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transition: opacity 900ms var(--ease-out);
+  background-image: var(--pattern);
+  background-size: var(--pattern-size);
+  background-position: calc(var(--chapter) * -84px) calc(var(--chapter) * -56px);
+  -webkit-mask-image: var(--pattern-mask);
+  mask-image: var(--pattern-mask);
+  pointer-events: none;
+}
+
 .stories-slider .swiper .swiper-slide-shadow-left,
 .stories-slider .swiper .swiper-slide-shadow-right {
   z-index: var(--stories-slider-z-shadows) !important;
 }
+
 .stories-slider .swiper .swiper-slide-shadow-left {
-  background-image: linear-gradient(to left, rgb(0, 0, 0), rgba(0, 0, 0, 0.5));
+  background-image: linear-gradient(to left, rgb(0 0 0), rgb(0 0 0 / 0.5));
 }
+
 .stories-slider .swiper .swiper-slide-shadow-right {
-  background-image: linear-gradient(to right, rgb(0, 0, 0), rgba(0, 0, 0, 0.5));
+  background-image: linear-gradient(to right, rgb(0 0 0), rgb(0 0 0 / 0.5));
 }
+
 .stories-slider.stories-slider-perspective .swiper .swiper,
 .stories-slider.stories-slider-perspective .swiper-slide-shadow-left,
 .stories-slider.stories-slider-perspective .swiper-slide-shadow-right {
@@ -65,399 +185,345 @@
   transform-origin: 0% 0% calc(-1 * var(--swiper-cube-translate-z));
 }
 
+/* End card (last chapter, once its time is up; see ProjectsSlider): the copy
+   moves to the middle of the frame, so the pattern clears out from behind it. */
+.swiper-slide[data-complete] .story-surface::before {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .story-surface[data-pattern]::before {
+    transition: none;
+  }
+}
+
+/* Caret for the challenge chapter's typing entrance (chapterMotion.ts). */
+.story-caret {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 3px;
+  margin-left: 2px;
+  background: #fff;
+  pointer-events: none;
+}
+
+/* ---------------------------------------------------------------------------
+   Tap zones (injected by the vendor script). Keyboard users get the arrow
+   keys instead; see ProjectsSlider.
+   --------------------------------------------------------------------------- */
+
 .stories-slider-button {
   position: absolute;
   z-index: var(--stories-slider-z-navigation);
   top: 0;
   height: 100%;
+  width: 30%;
+  cursor: pointer;
   user-select: none;
   -webkit-user-select: none;
 }
+
+.stories-slider-button-prev {
+  left: 0;
+}
+
+.stories-slider-button-next {
+  right: 0;
+}
+
 .stories-slider-button::before {
   content: "";
   position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
+  inset: 0;
   opacity: 0;
-  transition-duration: 200ms;
+  transition: opacity 200ms;
 }
-.stories-slider-button:active::before {
-  opacity: 0.25;
-}
-.stories-slider-button-prev {
-  left: 0;
-  width: 30%;
-}
+
 .stories-slider-button-prev::before {
-  background-image: linear-gradient(to right, #000, rgba(0, 0, 0, 0));
+  background-image: linear-gradient(to right, rgb(0 0 0 / 0.35), transparent);
 }
-.stories-slider-button-next {
-  right: 0;
-  width: 30%;
-}
+
 .stories-slider-button-next::before {
-  background-image: linear-gradient(to left, #000, rgba(0, 0, 0, 0));
+  background-image: linear-gradient(to left, rgb(0 0 0 / 0.35), transparent);
 }
+
+.stories-slider-button:active::before {
+  opacity: 1;
+}
+
+/* ---------------------------------------------------------------------------
+   Chapter progress
+   --------------------------------------------------------------------------- */
 
 .stories-slider-pagination {
   position: absolute;
-  left: 8px;
-  right: 8px;
-  top: 8px;
+  left: 16px;
+  right: 16px;
+  top: 14px;
   display: flex;
-  justify-content: space-between;
+  gap: 4px;
   z-index: var(--stories-slider-z-pagination);
   pointer-events: none;
   transform: translate3d(0, 0, 0);
 }
+
 .stories-slider-pagination-bullet {
-  width: 100%;
-  flex-shrink: 10;
-  border-radius: 999px;
-  height: 2px;
-  background: rgba(255, 255, 255, 0.35);
   position: relative;
+  flex: 1 1 0;
+  height: 2px;
+  background: rgb(255 255 255 / 0.35);
   overflow: hidden;
-  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.35);
 }
+
 .stories-slider-pagination-bullet span {
   position: absolute;
+  inset: 0;
   background: #fff;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  border-radius: 999px;
   transform: translateX(-100%);
   transition-timing-function: linear;
 }
+
 .stories-slider-pagination-bullet-viewed span {
   transform: translateX(0%);
   transition-duration: 0ms !important;
 }
-.stories-slider-pagination-bullet + .stories-slider-pagination-bullet {
-  margin-left: 2px;
-}
 
-a.stories-slider-user,
-.stories-slider-user a {
-  -webkit-touch-callout: none;
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-  transition-duration: 200ms;
-  transform: translate3d(0, 0, 0);
-}
-a.stories-slider-user:active,
-.stories-slider-user a:active {
-  opacity: 0.55;
-}
+/* ---------------------------------------------------------------------------
+   Header: project + close
+   --------------------------------------------------------------------------- */
 
 .stories-slider-user {
-  display: flex;
-  align-items: center;
   position: absolute;
-  top: 20px;
-  left: 12px;
-  /* height: 32px; */
+  top: 30px;
+  left: 16px;
+  right: 72px;
   z-index: var(--stories-slider-z-user);
-  color: #fff;
-  text-decoration: none;
-  user-select: none;
-  transform: translate3d(0, 0, 0);
-  -webkit-user-select: none;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-left: 12px;
+  border-left: 2px solid #fff;
+  pointer-events: none;
 }
-.stories-slider-user-avatar {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  margin-right: 12px;
-}
-.stories-slider-user-avatar img {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  object-fit: cover;
-  object-position: center;
-}
+
 .stories-slider-user-name {
-  font-size: 14px;
-  font-weight: bold;
-  margin-right: 12px;
-  text-shadow: 0px 0px 2px rgba(0, 0, 0, 0.35);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.25;
 }
+
 .stories-slider-user-date {
-  font-size: 14px;
-  font-weight: normal;
-  opacity: 0.55;
-  text-shadow: 0px 0px 2px rgba(0, 0, 0, 0.35);
+  font-size: 0.8125rem;
+  color: #fff;
 }
 
 .stories-slider-actions {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   position: absolute;
-  right: 10px;
-  top: 18px;
-  height: 32px;
+  right: 8px;
+  top: 22px;
   z-index: var(--stories-slider-z-actions);
-  transition-duration: 200ms;
-  user-select: none;
-  transform: translate3d(0, 0, 0);
-  -webkit-user-select: none;
 }
 
 .stories-slider-close-button {
-  margin-left: 18px;
-  width: 22px;
-  height: 22px;
-  appearance: none;
-  border: none;
-  outline: none;
-  box-shadow: none;
-  display: block;
   position: relative;
-  cursor: pointer;
-  padding: 0;
-  background: transparent;
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-  user-select: none;
-  -webkit-user-select: none;
-}
-.stories-slider-close-button::before, .stories-slider-close-button::after {
-  content: "";
-  width: 125%;
-  height: 2px;
-  background: #fff;
-  border-radius: 999px;
   display: block;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius);
+  background: transparent;
+  cursor: pointer;
+}
+
+.stories-slider-close-button::before,
+.stories-slider-close-button::after {
+  content: "";
   position: absolute;
   left: 50%;
   top: 50%;
-  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.35);
+  width: 22px;
+  height: 2px;
+  background: #fff;
 }
+
 .stories-slider-close-button::before {
   transform: translate(-50%, -50%) rotate(45deg);
 }
+
 .stories-slider-close-button::after {
   transform: translate(-50%, -50%) rotate(-45deg);
 }
-.stories-slider-close-button:active {
-  opacity: 0.55;
+
+.stories-slider-close-button:hover {
+  background: rgb(255 255 255 / 0.14);
 }
 
+.stories-slider-close-button:focus-visible,
+.story-cta:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+/* ---------------------------------------------------------------------------
+   Content
+   --------------------------------------------------------------------------- */
+
 .stories-slider-content {
+  position: relative;
+  /* No z-index: lets the call to action sit above the tap zones. */
+  display: flex;
   width: 100%;
   height: 100%;
-  position: relative;
-  z-index: var(--stories-slider-z-content);
-  display: flex;
-  align-items: center;
-  justify-content: center;
   user-select: none;
   -webkit-user-select: none;
 }
 
-.stories-slider-content *:not(.cta) {
+.story-body {
+  display: flex;
+  width: 100%;
+  padding: 108px 24px 32px;
+}
+
+.story-slide {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.story-chapter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  font-size: 0.875rem;
   color: #fff;
 }
 
-.stories-slider-content > img,
-.stories-slider-content > video {
-  width: 100%;
-  height: 100%;
-  object-position: center;
-  display: block;
-  border: none;
-  outline: none;
-  background: none;
-  background-color: transparent;
-}
-.stories-slider-content > img {
-  object-fit: cover;
-}
-.stories-slider-content > video {
-  object-fit: contain;
+.story-chapter-count {
+  font-variant-numeric: tabular-nums;
+  color: #fff;
 }
 
+.story-cover-title {
+  font-size: clamp(3rem, 15vw, 4.25rem);
+  line-height: 0.92;
+  letter-spacing: -0.045em;
+  font-weight: 600;
+  font-variation-settings: "wdth" 75, "opsz" 96;
+}
+
+.story-lead {
+  font-size: 1.25rem;
+  line-height: 1.4;
+  color: #fff;
+}
+
+.story-statement {
+  position: relative; /* anchors the typing caret */
+  font-size: clamp(1.75rem, 8vw, 2.25rem);
+  line-height: 1.12;
+  letter-spacing: -0.025em;
+  font-weight: 500;
+  font-variation-settings: "wdth" 85, "opsz" 48;
+  text-wrap: balance;
+}
+
+.story-list {
+  border-top: 1px solid rgb(255 255 255 / 0.35);
+}
+
+.story-list li {
+  padding-block: 0.875rem;
+  font-size: 1.25rem;
+  line-height: 1.3;
+  border-bottom: 1px solid rgb(255 255 255 / 0.35);
+}
+
+.story-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.story-tags li {
+  padding: 0.5rem 0.875rem;
+  font-size: 1rem;
+  border: 1px solid rgb(255 255 255 / 0.6);
+  border-radius: var(--radius);
+}
+
+.story-media {
+  display: block;
+  width: 100%;
+  max-height: 60%;
+  object-fit: cover;
+  border-radius: var(--radius);
+  background: rgb(0 0 0 / 0.25);
+}
+
+/* The call to action, set apart from the result above it. */
+.story-cta-block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid rgb(255 255 255 / 0.35);
+}
+
+.story-cta {
+  position: relative;
+  z-index: calc(var(--stories-slider-z-navigation) + 10);
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  min-height: 3rem;
+  padding: 0.75rem 1.25rem;
+  font-weight: 500;
+  color: #1a1640;
+  background: #fff;
+  border-radius: var(--radius);
+  pointer-events: auto;
+  transition: background-color 200ms var(--ease-out);
+}
+
+.story-cta:hover {
+  background: #e9e6ff;
+}
+
+/* Injected by the vendor when autoplaying video is blocked. */
 .stories-slider-play-button {
   position: absolute;
   left: 50%;
   top: 50%;
   z-index: calc(var(--stories-slider-z-navigation) + 10);
-  transform: translate3d(-50%, -50%, 0);
-  user-select: none;
   padding: 24px;
+  transform: translate3d(-50%, -50%, 0);
+  cursor: pointer;
 }
+
 .stories-slider-play-button svg {
+  width: 72px;
+  height: 72px;
+  opacity: 0.85;
+}
+
+.story-slide-cover {
   position: relative;
-  width: 96px;
-  height: 96px;
-  opacity: 0.75;
-}
-.stories-slider-play-button:active {
-  opacity: 0.55;
 }
 
-.stories-slider {
-  position: fixed;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1000;
-  transform: scale(0);
-  transform: translate3d(0, 0, 0) scale(0.5);
-  opacity: 0;
-  background: var(--stories-slider-bg);
-}
-@media (min-width: 415px), (min-height: 897px) {
-  .stories-slider {
-    background: rgb(41, 40, 49);
-  }
-}
-.stories-slider > .swiper {
-  z-index: 2;
-  max-width: 414px;
-  max-height: 896px;
-}
-.stories-slider:not(.stories-slider-in) {
-  pointer-events: none;
-}
-.stories-slider:not(.stories-slider-in) * {
-  pointer-events: none !important;
-}
-.stories-slider-in {
-  animation: stories-slider-in 400ms forwards;
-  pointer-events: auto;
-  transform: translate3d(0, 0, 0) scale(1);
-  opacity: 1;
-}
-.stories-slider-out {
-  pointer-events: none;
-  animation: stories-slider-out 400ms forwards !important;
-}
-
-@keyframes stories-slider-in {
-  0% {
-    transform: translate3d(0, 0, 0) scale(0.5);
-    opacity: 0;
-  }
-  50% {
-    transform: translate3d(0, 0, 0) scale(1.05);
-    opacity: 1;
-  }
-  100% {
-    transform: translate3d(0, 0, 0) scale(1);
-    opacity: 1;
-  }
-}
-@keyframes stories-slider-out {
-  0% {
-    transform: translate3d(0, 0, 0) scale(1);
-    opacity: 1;
-  }
-  50% {
-    transform: translate3d(0, 0, 0) scale(0.5);
-    opacity: 0;
-  }
-  100% {
-    transform: translate3d(0, 0, 0) scale(0.5);
-    opacity: 0;
-  }
-}
-
-.project-header {
-  border-left: 3px solid var(--project-accent, #6366f1);
-  padding-left: 12px;
-}
-
-.banner-wrapper {
-  --col-gap: 2rem;
-  --barH: 1rem;
-  --roleH: 2rem;
-  --flapH: 2rem;
-}
-
-.banner {
-  width: 14rem;
-  display: grid;
-  grid-template:
-    "role"
-    "icon"
-    "title"
-    "descr";
-  align-items: flex-start;
-  gap: 1rem;
-  padding-block-end: calc(var(--flapH) + 1rem);
-  text-align: center;
-  background: var(--accent-color);
-  background-image: linear-gradient(
-    rgba(0, 0, 0, 0.6) var(--roleH),
-    rgba(0, 0, 0, 0.4) calc(var(--roleH) + 0.5rem),
-    rgba(0, 0, 0, 0) calc(var(--roleH) + 0.5rem + 5rem)
-  );
-  clip-path: polygon(
-    calc(var(--col-gap) / -2 - 5px) 0,
-    calc(100% + var(--col-gap) / 2 + 5px) 0,
-    calc(100% + var(--col-gap) / 2 + 5px ) calc(100% - var(--flapH)),
-    50% 100%,
-    calc(var(--col-gap) / -2 - 5px) calc(100% - var(--flapH))
-  );
-}
-
-/* Decorative bar behind role */
-.banner::before {
-  content: "";
-  grid-area: role;
-  height: var(--barH);
-  width: calc(100% + var(--col-gap));
-  margin-left: calc(var(--col-gap) / -2);
-  margin-top: calc(var(--roleH) / 2 - var(--barH) / 2);
-  background: grey;
-  z-index: -1;
-  background-image: linear-gradient(
-    rgba(255, 255, 255, 0.4),
-    rgba(255, 255, 255, 0.2) 30%,
-    rgba(255, 255, 255, 0.1) 40%,
-    rgba(0, 0, 0, 0.1) 60%,
-    rgba(0, 0, 0, 0.2) 70%,
-    rgba(0, 0, 0, 0.4)
-  );
-}
-
-/* role */
-.banner::after {
-  content: "";
-  grid-area: role;
-  background: var(--accent-color);
-  background-image: linear-gradient(
-    rgba(255, 255, 255, 0.4),
-    rgba(255, 255, 255, 0.2) 30%,
-    rgba(255, 255, 255, 0.1) 40%,
-    rgba(0, 0, 0, 0.1) 60%,
-    rgba(0, 0, 0, 0.2) 70%,
-    rgba(0, 0, 0, 0.4)
-  );
-  height: var(--roleH);
-}
-
-.banner .icon,
-.banner .title,
-.banner .descr {
-  padding-inline: 1rem;
-  color: white;
-  text-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.5);
-}
-
-.banner .icon {
-  font-size: 3rem;
-}
-.banner .title {
-  font-size: 1.8rem;
+.story-monogram {
+  position: absolute;
+  top: 0;
+  right: -0.06em;
+  font-size: 13rem;
+  line-height: 0.8;
+  letter-spacing: -0.06em;
   font-weight: 700;
-}
-
-.banner .descr {
-  font-size: 1.125rem;
+  font-variation-settings: "wdth" 75, "opsz" 96;
+  color: rgb(255 255 255 / 0.14);
+  pointer-events: none;
 }

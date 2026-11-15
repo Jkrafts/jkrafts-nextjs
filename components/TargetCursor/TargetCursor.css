@@ -1,18 +1,23 @@
-:root {
-  --target-cursor-color: #000;
-  --cursor-blend: difference;
-}
-
-html.dark {
-  --target-cursor-color: #fff;
-}
-
-html.light {
-  --target-cursor-color: #000;
-  --cursor-blend: normal;
-}
-
+/* Hidden by default; TargetCursor enables it only for fine, hover-capable
+   pointers without a reduced-motion preference. */
 .target-cursor-wrapper {
+  display: none;
+}
+
+html.has-target-cursor,
+html.has-target-cursor * {
+  cursor: none !important;
+}
+
+/* Text fields keep the I-beam: precise caret placement matters more than
+   brand consistency. */
+html.has-target-cursor input,
+html.has-target-cursor textarea {
+  cursor: text !important;
+}
+
+html.has-target-cursor .target-cursor-wrapper {
+  display: block;
   position: fixed;
   top: 0;
   left: 0;
@@ -20,52 +25,65 @@ html.light {
   height: 0;
   pointer-events: none;
   z-index: 9999;
-  mix-blend-mode: var(--cursor-blend);
-  transform: translate(-50%, -50%);
+  /* White + difference inverts whatever is underneath, so the cursor stays
+     visible over both the page and its text (e.g. headlines in ink) in
+     either theme. */
+  color: #fff;
+  mix-blend-mode: difference;
+}
+
+/* Framing a control: plain colours, so the violet frame stays on brand
+   (inverted it would turn yellow-green). */
+html.has-target-cursor .target-cursor-wrapper.is-framing {
+  color: var(--ink);
+  mix-blend-mode: normal;
 }
 
 .target-cursor-dot {
   position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 4px;
-  height: 4px;
-  background: var(--target-cursor-color);
+  left: 0;
+  top: 0;
+  width: 6px;
+  height: 6px;
+  margin: -3px 0 0 -3px;
+  background: currentColor;
   border-radius: 50%;
-  transform: translate(-50%, -50%);
   will-change: transform;
 }
 
 .target-cursor-corner {
   position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 12px;
-  height: 12px;
-  border: 3px solid var(--target-cursor-color);
+  left: 0;
+  top: 0;
+  width: 10px;
+  height: 10px;
+  border: 2px solid currentColor;
+  opacity: 0.45;
+  transition: opacity 200ms ease, color 200ms ease;
   will-change: transform;
 }
 
+.target-cursor-wrapper.is-framing .target-cursor-corner {
+  opacity: 1;
+  color: var(--violet);
+}
+
 .corner-tl {
-  transform: translate(-150%, -150%);
   border-right: none;
   border-bottom: none;
 }
 
 .corner-tr {
-  transform: translate(50%, -150%);
   border-left: none;
   border-bottom: none;
 }
 
 .corner-br {
-  transform: translate(50%, 50%);
   border-left: none;
   border-top: none;
 }
 
 .corner-bl {
-  transform: translate(-150%, 50%);
   border-right: none;
   border-top: none;
 }

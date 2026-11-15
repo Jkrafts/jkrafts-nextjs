@@ -1,19 +1,17 @@
+import { PATTERN_VARIANTS, projectPattern, type PatternVariant, type ProjectPattern } from '../lib/patterns';
+
 type SlideType =
   | 'challenge'
   | 'craft'
   | 'process'
   | 'result'
-  | 'cover'
-  | 'meta';
+  | 'cover';
 
 export type ProjectSlide = {
   id: string;
   type: SlideType;
   title?: string;
   body?: string;
-  accentColor?: string;
-  index?: number;
-  skills?: string[];
   media?: {
     type: 'image' | 'video';
     src: string;
@@ -26,14 +24,38 @@ export type ProjectStory = {
   title: string;
   shortTagline: string;
   category: 'Website' | 'Web App' | 'SaaS' | 'System';
-  cover: {
-    type: 'image' | 'video';
-    src: string;
-  };
   skills: string[];
   accentColor: string;
-  icon?: string;
+  /** Pattern family (lib/patterns.ts). Optional: one is picked from the id. */
+  pattern?: PatternVariant;
   slides: ProjectSlide[];
+};
+
+// Projects have no photography yet, so each one carries a monogram built
+// from data every project already has (its unique title).
+export const getInitials = (title: string): string =>
+  title
+    .split(' ')
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((word) => word[0]?.toUpperCase() ?? '')
+    .join('');
+
+// Without an explicit family, a project gets one picked from its id, so it
+// stays stable but new projects don't all share a look.
+const defaultVariant = (id: string): PatternVariant => {
+  let h = 0;
+  for (const ch of id) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
+  return PATTERN_VARIANTS[h % PATTERN_VARIANTS.length];
+};
+
+export const getPattern = (project: ProjectStory): ProjectPattern =>
+  projectPattern(project.id, project.accentColor, project.pattern ?? defaultVariant(project.id));
+
+/** CSS custom properties that paint a project's pattern (see globals.css). */
+export const patternStyle = (project: ProjectStory) => {
+  const p = getPattern(project);
+  return { '--pattern': p.image, '--pattern-size': p.size } as Record<string, string>;
 };
 
 export const projects: ProjectStory[] = [
@@ -42,12 +64,9 @@ export const projects: ProjectStory[] = [
     title: 'Subscription Management SaaS',
     shortTagline: 'A clean dashboard for managing plans and payments.',
     category: 'SaaS',
-    cover: {
-      type: 'video',
-      src: '/projects/saas/cover.mp4'
-    },
     skills: ['Laravel', 'Stripe', 'Filament', 'SaaS Architecture'],
-    accentColor: '#16a34a',
+    accentColor: '#15803d',
+    pattern: 'maze',
     slides: [
       {
         id: 'cover',
@@ -58,13 +77,13 @@ export const projects: ProjectStory[] = [
       {
         id: 'problem',
         type: 'challenge',
-        title: 'The Challenge',
+        title: 'The challenge',
         body: 'Managing subscriptions, billing, and roles in one unified platform.'
       },
       {
         id: 'craft',
         type: 'craft',
-        title: 'The Craft',
+        title: 'The craft',
         bullets: [
           'Multi-tenant architecture',
           'Stripe integration',
@@ -75,16 +94,12 @@ export const projects: ProjectStory[] = [
       {
         id: 'process',
         type: 'process',
-        title: 'The Process',
-        media: {
-          type: 'image',
-          src: '/projects/saas/ui.jpg'
-        }
+        title: 'Built with'
       },
       {
         id: 'result',
         type: 'result',
-        title: 'The Result',
+        title: 'The result',
         body: 'Streamlined billing operations and reduced manual overhead.'
       }
     ]
@@ -94,12 +109,9 @@ export const projects: ProjectStory[] = [
     title: 'Offline POS System',
     shortTagline: 'Fast, reliable sales even without internet.',
     category: 'System',
-    cover: {
-      type: 'image',
-      src: '/projects/pos/cover.jpg'
-    },
     skills: ['Laravel', 'Offline-first', 'Thermal Printing', 'Performance'],
-    accentColor: '#4f46e5',
+    accentColor: '#4338ca',
+    pattern: 'circuit',
     slides: [
       {
         id: 'cover',
@@ -110,13 +122,13 @@ export const projects: ProjectStory[] = [
       {
         id: 'problem',
         type: 'challenge',
-        title: 'The Challenge',
+        title: 'The challenge',
         body: 'The business needed a POS system that works reliably even when connectivity is unstable.'
       },
       {
         id: 'craft',
         type: 'craft',
-        title: 'The Craft',
+        title: 'The craft',
         bullets: [
           'Laravel backend architecture',
           'Offline-first sync logic',
@@ -127,16 +139,12 @@ export const projects: ProjectStory[] = [
       {
         id: 'process',
         type: 'process',
-        title: 'Process',
-        media: {
-          type: 'image',
-          src: '/projects/pos/wireframes.jpg'
-        }
+        title: 'Built with'
       },
       {
         id: 'result',
         type: 'result',
-        title: 'Result',
+        title: 'The result',
         body: 'Reduced checkout time and improved reliability during peak hours.'
       }
     ]
@@ -146,12 +154,9 @@ export const projects: ProjectStory[] = [
     title: 'Corporate Website',
     shortTagline: 'A modern online presence for a growing brand.',
     category: 'Website',
-    cover: {
-      type: 'image',
-      src: '/projects/business/cover.jpg'
-    },
     skills: ['Twill CMS', 'Laravel', 'UI Design', 'Performance'],
-    accentColor: '#0ea5e9',
+    accentColor: '#0369a1',
+    pattern: 'triangles',
     slides: [
       {
         id: 'cover',
@@ -162,13 +167,13 @@ export const projects: ProjectStory[] = [
       {
         id: 'problem',
         type: 'challenge',
-        title: 'The Challenge',
+        title: 'The challenge',
         body: 'Create a professional, fast, and easy-to-manage website.'
       },
       {
         id: 'craft',
         type: 'craft',
-        title: 'The Craft',
+        title: 'The craft',
         bullets: [
           'Custom WordPress theme',
           'SEO-friendly structure',
@@ -178,16 +183,12 @@ export const projects: ProjectStory[] = [
       {
         id: 'process',
         type: 'process',
-        title: 'The Process',
-        media: {
-          type: 'image',
-          src: '/projects/business/mockups.jpg'
-        }
+        title: 'Built with'
       },
       {
         id: 'result',
         type: 'result',
-        title: 'The Result',
+        title: 'The result',
         body: 'Improved brand credibility and online reach.'
       }
     ]
@@ -197,12 +198,9 @@ export const projects: ProjectStory[] = [
     title: 'Internal Admin Tool',
     shortTagline: 'Tools that make internal operations effortless.',
     category: 'Web App',
-    cover: {
-      type: 'image',
-      src: '/projects/admin/cover.jpg'
-    },
     skills: ['Laravel', 'APIs', 'Automation'],
-    accentColor: '#f97316',
+    accentColor: '#c2410c',
+    pattern: 'plots',
     slides: [
       {
         id: 'cover',
@@ -213,13 +211,13 @@ export const projects: ProjectStory[] = [
       {
         id: 'problem',
         type: 'challenge',
-        title: 'The Challenge',
+        title: 'The challenge',
         body: 'Manual processes slowed down daily operations.'
       },
       {
         id: 'craft',
         type: 'craft',
-        title: 'The Craft',
+        title: 'The craft',
         bullets: [
           'API-driven design',
           'Automation workflows',
@@ -229,16 +227,12 @@ export const projects: ProjectStory[] = [
       {
         id: 'process',
         type: 'process',
-        title: 'The Process',
-        media: {
-          type: 'image',
-          src: '/projects/admin/flows.jpg'
-        }
+        title: 'Built with'
       },
       {
         id: 'result',
         type: 'result',
-        title: 'The Result',
+        title: 'The result',
         body: 'Saved time and reduced human error.'
       }
     ]
@@ -248,13 +242,9 @@ export const projects: ProjectStory[] = [
     title: 'Interactive Web Experience',
     shortTagline: 'Motion-driven UI experiments.',
     category: 'Web App',
-    cover: {
-      type: 'video',
-      src: '/projects/interactive/cover.mp4'
-    },
     skills: ['GSAP', 'Three.js', 'UI Engineering'],
-    accentColor: '#a855f7',
-    icon: 'store-front',
+    accentColor: '#7e22ce',
+    pattern: 'arcs',
     slides: [
       {
         id: 'cover',
@@ -265,13 +255,13 @@ export const projects: ProjectStory[] = [
       {
         id: 'problem',
         type: 'challenge',
-        title: 'The Challenge',
+        title: 'The challenge',
         body: 'Exploring how motion enhances usability and delight.'
       },
       {
         id: 'craft',
         type: 'craft',
-        title: 'The Craft',
+        title: 'The craft',
         bullets: [
           'GSAP animations',
           'WebGL experiments',
@@ -281,7 +271,7 @@ export const projects: ProjectStory[] = [
       {
         id: 'process',
         type: 'process',
-        title: 'The Process',
+        title: 'The process',
         media: {
           type: 'video',
           src: '/projects/interactive/demo.mp4'
@@ -290,7 +280,7 @@ export const projects: ProjectStory[] = [
       {
         id: 'result',
         type: 'result',
-        title: 'The Result',
+        title: 'The result',
         body: 'A playful but performant experimental build.'
       }
     ]

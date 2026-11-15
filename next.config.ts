@@ -1,9 +1,12 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  // Static HTML export (written to out/): there is no Node server, so no
+  // API routes and no on-demand image optimisation. The contact form posts
+  // straight to the Laravel API (NEXT_PUBLIC_LARAVEL_API_URL).
+  output: 'export',
   images: {
-    domains: ['picsum.photos'],
+    unoptimized: true,
   },
 };
 
