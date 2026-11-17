@@ -342,6 +342,10 @@ export function completeStoryReturn(
   departureTop = null;
 
   requestAnimationFrame(() => {
+    // The router may have scrolled since (e.g. to a `#work` hash that sits
+    // above the rows), so put the row back before measuring the hand-off.
+    const drift = row.getBoundingClientRect().top - targetTop;
+    if (Math.abs(drift) > 1) scrollTo(Math.max(0, window.scrollY + drift));
     const to = toBox(row);
     const accent = entry.overlay.panel.style.background;
     const label = cloneRow(row, to, accent);

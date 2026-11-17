@@ -105,35 +105,36 @@ export const projects: ProjectStory[] = [
     ]
   },
   {
-    id: 'pos-system',
-    title: 'Offline POS System',
-    shortTagline: 'Fast, reliable sales even without internet.',
+    id: 'liqa',
+    title: 'LiQa Bar POS',
+    shortTagline: 'Bar tills that keep selling when the internet drops.',
     category: 'System',
-    skills: ['Laravel', 'Offline-first', 'Thermal Printing', 'Performance'],
+    skills: ['Laravel', 'Filament', 'NativePHP', 'Offline sync', 'M-Pesa', 'KRA eTIMS'],
     accentColor: '#4338ca',
     pattern: 'circuit',
     slides: [
       {
         id: 'cover',
         type: 'cover',
-        title: 'Offline POS System',
-        body: 'Designed for real-world retail environments.'
+        title: 'LiQa Bar POS',
+        body: 'Point of sale and back office built for how bars actually trade.'
       },
       {
         id: 'problem',
         type: 'challenge',
         title: 'The challenge',
-        body: 'The business needed a POS system that works reliably even when connectivity is unstable.'
+        body: 'Bars sell by the shot from sealed bottles, hand cash to staff every shift and lose stock quietly. Generic retail tills track none of that, and stop working when the connection does.'
       },
       {
         id: 'craft',
         type: 'craft',
         title: 'The craft',
         bullets: [
-          'Laravel backend architecture',
-          'Offline-first sync logic',
-          'Role-based access',
-          'Thermal receipt printing'
+          'Desktop tills that run locally and sync to the cloud',
+          'Stock tracked by the bottle and by the shot',
+          'Till sessions with X and Z shift reports',
+          'M-Pesa, card and KRA eTIMS tax receipts',
+          'Happy-hour pricing and cocktail recipe costing'
         ]
       },
       {
@@ -145,39 +146,41 @@ export const projects: ProjectStory[] = [
         id: 'result',
         type: 'result',
         title: 'The result',
-        body: 'Reduced checkout time and improved reliability during peak hours.'
+        body: 'Owners see sales, pour cost and margin for every shift, and the tills keep trading through outages.'
       }
     ]
   },
   {
-    id: 'business-site',
-    title: 'Corporate Website',
-    shortTagline: 'A modern online presence for a growing brand.',
-    category: 'Website',
-    skills: ['Twill CMS', 'Laravel', 'UI Design', 'Performance'],
+    id: 'servpure',
+    title: 'ServPure Water Shop System',
+    shortTagline: 'Sales, production and stock for a bottled-water business.',
+    category: 'System',
+    skills: ['Laravel', 'Filament', 'M-Pesa', 'Inventory', 'Receipt printing'],
     accentColor: '#0369a1',
     pattern: 'triangles',
     slides: [
       {
         id: 'cover',
         type: 'cover',
-        title: 'Corporate Website',
-        body: 'Showcasing the brand with a professional online presence.'
+        title: 'ServPure',
+        body: 'One system for the counter, the production line and the stock room.'
       },
       {
         id: 'problem',
         type: 'challenge',
         title: 'The challenge',
-        body: 'Create a professional, fast, and easy-to-manage website.'
+        body: 'A water shop sells bottled stock and metered refills, turns bottles and labels into finished products, and needs every litre and every shilling to reconcile at the end of the day.'
       },
       {
         id: 'craft',
         type: 'craft',
         title: 'The craft',
         bullets: [
-          'Custom WordPress theme',
-          'SEO-friendly structure',
-          'Responsive UI'
+          'POS with refills, held sales and customer pricing',
+          'Production runs from raw materials to finished stock',
+          'Shop-day sessions with water meter readings',
+          'Stock takes, M-Pesa payments and printed receipts',
+          'Backfill mode for sales recorded on paper during downtime'
         ]
       },
       {
@@ -189,39 +192,41 @@ export const projects: ProjectStory[] = [
         id: 'result',
         type: 'result',
         title: 'The result',
-        body: 'Improved brand credibility and online reach.'
+        body: 'Sales, stock and water usage reconcile every day, and missed paper sales land on the right date.'
       }
     ]
   },
   {
-    id: 'admin-tool',
-    title: 'Internal Admin Tool',
-    shortTagline: 'Tools that make internal operations effortless.',
-    category: 'Web App',
-    skills: ['Laravel', 'APIs', 'Automation'],
+    id: 'meal-magic',
+    title: 'Meal Magic Caterers',
+    shortTagline: 'A booking-ready website for a Nairobi catering company.',
+    category: 'Website',
+    skills: ['Laravel', 'Twill CMS', 'Tailwind CSS', 'Alpine.js', 'SEO'],
     accentColor: '#c2410c',
     pattern: 'plots',
     slides: [
       {
         id: 'cover',
         type: 'cover',
-        title: 'Internal Admin Tool',
-        body: 'Streamlining internal operations with custom tools.'
+        title: 'Meal Magic',
+        body: 'Catering for corporate functions, weddings and celebrations across Kenya.'
       },
       {
         id: 'problem',
         type: 'challenge',
         title: 'The challenge',
-        body: 'Manual processes slowed down daily operations.'
+        body: 'Great food and strong event photography, but a slow, dated site whose booking forms could fail and that the team found hard to update.'
       },
       {
         id: 'craft',
         type: 'craft',
         title: 'The craft',
         bullets: [
-          'API-driven design',
-          'Automation workflows',
-          'Secure access control'
+          'Services, sample menus and event galleries',
+          'Online booking and contact forms with email alerts',
+          'Everything editable from the Twill CMS',
+          'Optimised images, sitemap and structured data',
+          'Accessible forms, FAQs and legal pages'
         ]
       },
       {
@@ -233,7 +238,7 @@ export const projects: ProjectStory[] = [
         id: 'result',
         type: 'result',
         title: 'The result',
-        body: 'Saved time and reduced human error.'
+        body: 'Clients can browse menus and past events and request a booking in minutes, and the team runs the site without a developer.'
       }
     ]
   },

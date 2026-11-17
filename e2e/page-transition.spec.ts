@@ -6,9 +6,14 @@ import { test, expect, type Page } from '@playwright/test';
  * lifts with the new page's headline handed over in place.
  */
 
-/** Largest offset between the curtain's copy of the headline and the real
-    one, compared letter by letter. */
-const headlineOffset = (page: Page) =>
+/**
+ * Records, on every frame while the curtain shows its copy of the new
+ * headline, the largest offset between the copy and the real headline,
+ * compared letter by letter. Measured inside the page, because the copy is
+ * only up for a fraction of a second and polling from the test can miss it
+ * on a busy machine. Read the result with `readHandoff`.
+ */
+const watchHandoff = (page: Page) =>
   page.evaluate(() => {
     const glyphs = (root: Element) => {
       const out: [number, number][] = [];
@@ -25,11 +30,28 @@ const headlineOffset = (page: Page) =>
       }
       return out;
     };
-    const a = glyphs(document.querySelector('.page-transition h1')!);
-    const b = glyphs(document.querySelector('main h1')!);
-    if (a.length !== b.length) return Infinity;
-    return Math.max(...a.map((p, i) => Math.max(Math.abs(p[0] - b[i][0]), Math.abs(p[1] - b[i][1]))));
+    const state = { frames: 0, last: Infinity };
+    (window as unknown as { __handoff: typeof state }).__handoff = state;
+    const started = performance.now();
+    const tick = () => {
+      const copy = document.querySelector('.page-transition h1');
+      const real = document.querySelector('main h1');
+      if (copy && real) {
+        const a = glyphs(copy);
+        const b = glyphs(real);
+        state.frames++;
+        state.last =
+          a.length === b.length
+            ? Math.max(...a.map((p, i) => Math.max(Math.abs(p[0] - b[i][0]), Math.abs(p[1] - b[i][1]))))
+            : Infinity;
+      }
+      if (performance.now() - started < 8000) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
   });
+
+const readHandoff = (page: Page) =>
+  page.evaluate(() => (window as unknown as { __handoff: { frames: number; last: number } }).__handoff);
 
 test.describe('Page transition', () => {
   for (const [from, to, label] of [
@@ -42,17 +64,20 @@ test.describe('Page transition', () => {
       await page.goto(from, { waitUntil: 'networkidle' });
       await page.waitForTimeout(500);
 
+      await watchHandoff(page);
       await page.locator(`header a[href="${to}"]`).first().click();
       // Covered first: the old page is still the route while the curtain rises.
       await expect(page.locator('.page-transition')).toHaveCount(1);
       expect(new URL(page.url()).pathname).toBe(from);
 
       await page.waitForURL((url) => url.pathname === to);
-      await page.waitForFunction(() => !!document.querySelector('.page-transition h1'));
-      await page.waitForTimeout(450); // the copy's lines have risen
-      expect(await headlineOffset(page)).toBeLessThan(1);
-
       await expect(page.locator('.page-transition')).toHaveCount(0, { timeout: 3000 });
+
+      // The copy was shown, and by its last frame (lines risen, curtain
+      // lifted) it sat exactly on the real headline.
+      const handoff = await readHandoff(page);
+      expect(handoff.frames).toBeGreaterThan(0);
+      expect(handoff.last).toBeLessThan(1);
       await expect(page.locator('main h1')).toBeFocused();
       expect(await page.evaluate(() => window.scrollY)).toBe(0);
       expect(errors).toEqual([]);

@@ -1,6 +1,6 @@
 import { Page } from '@playwright/test';
 
-export const PAGES = ['/', '/about', '/projects', '/contact'];
+export const PAGES = ['/', '/about', '/projects', '/contact', '/privacy', '/cookies', '/terms', '/security', '/licenses'];
 
 export function collectConsole(page: Page) {
   const messages: { type: string; text: string; location?: string }[] = [];

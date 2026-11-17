@@ -1,0 +1,30 @@
+.cookie-banner {
+  position: fixed;
+  z-index: 70;
+  inset-inline: var(--gutter);
+  bottom: var(--gutter);
+  max-width: 24rem;
+  padding: 1.25rem;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  background: var(--paper-raised);
+  color: var(--ink);
+  animation: cookie-in 500ms var(--ease-out) both;
+}
+
+.cookie-banner:focus-visible {
+  outline: 2px solid var(--violet);
+  outline-offset: 3px;
+}
+
+/* The story viewer is a full-screen dialog; the banner waits behind it. */
+html.story-open .cookie-banner {
+  display: none;
+}
+
+@keyframes cookie-in {
+  from {
+    opacity: 0;
+    transform: translateY(1rem);
+  }
+}

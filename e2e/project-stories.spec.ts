@@ -113,7 +113,7 @@ test.describe('Project stories', () => {
     page.on('pageerror', (e) => errors.push(e.message));
 
     await page.goto('/', { waitUntil: 'networkidle' });
-    const row = page.locator('a[data-story="pos-system"]');
+    const row = page.locator('a[data-story="liqa"]');
     await row.scrollIntoViewIfNeeded();
     await page.waitForTimeout(300);
     const before = await row.boundingBox();
@@ -123,11 +123,11 @@ test.describe('Project stories', () => {
     await expect(page.locator('.story-transition')).toHaveCount(1);
     expect(new URL(page.url()).pathname).toBe('/');
 
-    await page.waitForURL('**/projects?story=pos-system');
+    await page.waitForURL('**/projects?story=liqa');
     await expect(page.locator('.story-transition')).toHaveCount(0, { timeout: 4000 });
     const viewer = page.locator('.stories-slider');
     await expect(viewer).not.toHaveAttribute('inert', '');
-    expect(await activeStoryTitle(page)).toBe('Offline POS System');
+    expect(await activeStoryTitle(page)).toBe('LiQa Bar POS');
     await expect(page.locator(':focus')).toHaveAttribute('aria-label', 'Close story');
 
     // Closing returns to the home page, with the row where it was and focused.
@@ -148,12 +148,12 @@ test.describe('Project stories', () => {
 
   test('closing a story returns home after an in-page link (e.g. #work) was used', async ({ page }) => {
     await page.goto('/', { waitUntil: 'networkidle' });
-    await page.getByRole('link', { name: 'See selected work' }).click();
+    await page.getByRole('link', { name: 'See the results' }).click();
     await page.waitForURL('**/#work');
     await page.waitForTimeout(1200);
 
-    await page.locator('a[data-story="pos-system"]').click();
-    await page.waitForURL('**/projects?story=pos-system');
+    await page.locator('a[data-story="liqa"]').click();
+    await page.waitForURL('**/projects?story=liqa');
     await expect(page.locator('.story-transition')).toHaveCount(0, { timeout: 4000 });
 
     await page.locator('.swiper-slide-active .swiper-slide-active .stories-slider-close-button').click();
@@ -163,7 +163,7 @@ test.describe('Project stories', () => {
     await expect(page.locator('.work-index')).toBeVisible({ timeout: 1500 });
     await expect(page.locator('.story-tile')).toHaveCount(0);
     await expect(page.locator('.story-transition')).toHaveCount(0, { timeout: 1500 });
-    await expect(page.locator('a[data-story="pos-system"]')).toBeInViewport();
+    await expect(page.locator('a[data-story="liqa"]')).toBeInViewport();
   });
 
   test('slide colours and patterns survive Swiper wiping slide styles', async ({ page }) => {
@@ -200,7 +200,7 @@ test.describe('Project stories', () => {
     // Back on the first chapter does nothing.
     await page.keyboard.press('ArrowLeft');
     await page.waitForTimeout(600);
-    expect(await activeStoryTitle(page)).toBe('Offline POS System');
+    expect(await activeStoryTitle(page)).toBe('LiQa Bar POS');
 
     // Forward through the last chapter (the call to action) closes it.
     for (let i = 0; i < 4; i++) {
@@ -210,13 +210,13 @@ test.describe('Project stories', () => {
     await expect(page.locator('.swiper-slide-active .swiper-slide-active .story-cta')).toHaveText(
       'Start a similar project',
     );
-    expect(await activeStoryTitle(page)).toBe('Offline POS System');
+    expect(await activeStoryTitle(page)).toBe('LiQa Bar POS');
 
     // Autoplay finishes the last chapter (5s) without closing or moving on,
     // and the chapter becomes an end card: copy centred, pattern cleared.
     await page.waitForTimeout(6500);
     await expect(viewer).not.toHaveAttribute('inert', '');
-    expect(await activeStoryTitle(page)).toBe('Offline POS System');
+    expect(await activeStoryTitle(page)).toBe('LiQa Bar POS');
     await expect(page.locator('.swiper-slide-active .swiper-slide-active .story-cta')).toBeInViewport();
     const endCard = await page.evaluate(() => {
       const slide = document.querySelector(
@@ -243,16 +243,16 @@ test.describe('Project stories', () => {
   });
 
   test('"Start a similar project" opens the contact form for that project', async ({ page }) => {
-    await page.goto('/projects?story=pos-system', { waitUntil: 'networkidle' });
+    await page.goto('/projects?story=liqa', { waitUntil: 'networkidle' });
     await page.waitForTimeout(600);
     for (let i = 0; i < 4; i++) {
       await page.keyboard.press('ArrowRight');
       await page.waitForTimeout(250);
     }
     await page.locator('.swiper-slide-active .swiper-slide-active .story-cta').click();
-    await page.waitForURL('**/contact?project=pos-system#project-form');
+    await page.waitForURL('**/contact?project=liqa#project-form');
 
-    await expect(page.getByRole('textbox', { name: 'Subject' })).toHaveValue('A project like Offline POS System');
+    await expect(page.getByRole('textbox', { name: 'Subject' })).toHaveValue('A project like LiQa Bar POS');
     await expect(page.getByRole('textbox', { name: 'Name', exact: true })).toBeFocused();
     await expect(page.locator('#project-form')).toBeInViewport();
     expect(await page.evaluate(() => document.documentElement.classList.contains('story-open'))).toBe(false);
@@ -275,7 +275,7 @@ test.describe('Project stories', () => {
         };
       });
 
-    await page.goto('/projects?story=pos-system', { waitUntil: 'networkidle' });
+    await page.goto('/projects?story=liqa', { waitUntil: 'networkidle' });
     await page.waitForTimeout(400);
     await page.keyboard.press('ArrowRight');
     // Mid-typing: caret showing, characters still hidden. Polled rather than
@@ -293,14 +293,14 @@ test.describe('Project stories', () => {
 
     // Reduced motion: chapters show complete, with nothing hidden or moving.
     await page.emulateMedia({ reducedMotion: 'reduce' });
-    await page.goto('/projects?story=pos-system', { waitUntil: 'networkidle' });
+    await page.goto('/projects?story=liqa', { waitUntil: 'networkidle' });
     await page.waitForTimeout(400);
     await page.keyboard.press('ArrowRight');
     await page.waitForTimeout(100);
     const still = await challenge();
     expect(still.caret).toBe(false);
     expect(still.hiddenChars).toBe(0);
-    expect(still.text).toBe('The business needed a POS system that works reliably even when connectivity is unstable.');
+    expect(still.text).toBe('Bars sell by the shot from sealed bottles, hand cash to staff every shift and lose stock quietly. Generic retail tills track none of that, and stop working when the connection does.');
   });
 
   test('browser Back during a story leaves no overlay or scroll lock', async ({ page }) => {
@@ -319,11 +319,11 @@ test.describe('Project stories', () => {
   test('with reduced motion the row is a plain deep link', async ({ page }) => {
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await page.goto('/', { waitUntil: 'networkidle' });
-    await page.locator('a[data-story="pos-system"]').click();
-    await page.waitForURL('**/projects?story=pos-system');
+    await page.locator('a[data-story="liqa"]').click();
+    await page.waitForURL('**/projects?story=liqa');
     await expect(page.locator('.story-transition')).toHaveCount(0);
     await page.waitForTimeout(600);
-    expect(await activeStoryTitle(page)).toBe('Offline POS System');
+    expect(await activeStoryTitle(page)).toBe('LiQa Bar POS');
 
     // Not entered through the transition: closing stays on /projects and
     // drops the query so a refresh doesn't reopen it.

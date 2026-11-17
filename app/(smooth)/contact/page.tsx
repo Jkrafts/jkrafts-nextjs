@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   description:
     "Get in touch with Jkrafts to discuss your project, collaboration opportunities, or creative ideas.",
   openGraph: {
-    title: "Get in touch to discuss ideas, collaborations, or new projects",
+    title: "Contact Jkrafts",
     description:
       "Get in touch with Jkrafts to discuss your project, collaboration opportunities, or creative ideas.",
     images: [{ url: "/og/contact.png", width: 1200, height: 630 }],
@@ -30,8 +30,8 @@ export default function ContactPage() {
   return (
     <main id="main">
       <PageIntro
-        title="Let’s build something remarkable."
-        lead="Available for new projects, collaborations, and long-term work."
+        title="Tell me about your project."
+        lead="Available for new projects and long-term work."
       />
 
       <div className="shell pb-[var(--section)]">

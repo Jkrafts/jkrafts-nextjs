@@ -11,8 +11,8 @@
    ========================================================================== */
 
 :root {
-  --paper: #f1f0f6;
-  --paper-raised: #fbfaff;
+  --paper: #f3f3f2;
+  --paper-raised: #fcfcfb;
   --ink: #1a1640;
   --ink-muted: #57537a;
   --line: rgb(26 22 64 / 0.16);
@@ -25,9 +25,9 @@
 
   /* Inverted band, used for the closing call to action */
   --band: #1a1640;
-  --band-ink: #f1f0f6;
+  --band-ink: #f3f3f2;
   --band-muted: #b9b5d6;
-  --band-line: rgb(241 240 246 / 0.2);
+  --band-line: rgb(243 243 242 / 0.2);
 
   --gutter: clamp(1rem, 4vw, 3.5rem);
   --section: clamp(5rem, 11vw, 10rem);
@@ -79,7 +79,7 @@
   --color-band-muted: var(--band-muted);
   --color-band-line: var(--band-line);
 
-  --font-sans: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
 }
 
 /* ==========================================================================
@@ -140,7 +140,7 @@
 /* ==========================================================================
    Typography, layout and shared components
    --------------------------------------------------------------------------
-   Display sizes use the narrow end of Bricolage's width axis with tight
+   Display sizes use the condensed end of Archivo's width axis with tight
    tracking; reading sizes stay at full width with generous leading.
    ========================================================================== */
 
@@ -150,7 +150,7 @@
     line-height: 0.9;
     letter-spacing: -0.035em;
     font-weight: 600;
-    font-variation-settings: "wdth" 75, "opsz" 96;
+    font-variation-settings: "wdth" 75;
   }
 
   .t-h1 {
@@ -158,7 +158,7 @@
     line-height: 0.95;
     letter-spacing: -0.04em;
     font-weight: 600;
-    font-variation-settings: "wdth" 75, "opsz" 96;
+    font-variation-settings: "wdth" 75;
   }
 
   .t-h2 {
@@ -166,7 +166,7 @@
     line-height: 1;
     letter-spacing: -0.035em;
     font-weight: 600;
-    font-variation-settings: "wdth" 78, "opsz" 72;
+    font-variation-settings: "wdth" 78;
   }
 
   .t-h3 {
@@ -174,7 +174,7 @@
     line-height: 1.15;
     letter-spacing: -0.02em;
     font-weight: 600;
-    font-variation-settings: "wdth" 88, "opsz" 32;
+    font-variation-settings: "wdth" 88;
   }
 
   .t-lead {
@@ -182,7 +182,7 @@
     line-height: 1.4;
     letter-spacing: -0.015em;
     font-weight: 400;
-    font-variation-settings: "wdth" 92, "opsz" 28;
+    font-variation-settings: "wdth" 92;
   }
 
   .t-statement {
@@ -190,7 +190,7 @@
     line-height: 1.12;
     letter-spacing: -0.03em;
     font-weight: 500;
-    font-variation-settings: "wdth" 85, "opsz" 60;
+    font-variation-settings: "wdth" 85;
   }
 
   .t-small {
@@ -316,6 +316,30 @@
     flex: none;
   }
 
+  /* A live status mark ("available for new projects"): a copy of the
+     square swells and fades behind it, like a signal. Transform and
+     opacity only, so it stays on the compositor; still under reduced
+     motion. */
+  .mark-live {
+    position: relative;
+    background: var(--violet);
+  }
+
+  .mark-live::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: inherit;
+    animation: mark-pulse 2.2s var(--ease-out) infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mark-live::after {
+      animation: none;
+      opacity: 0;
+    }
+  }
+
   .skip-link {
     position: fixed;
     left: 1rem;
@@ -389,6 +413,18 @@
    animates in start hidden only when JS is available, and a CSS fallback
    reveals them anyway if the animation never runs.
    ========================================================================== */
+
+@keyframes mark-pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  70%,
+  100% {
+    transform: scale(3);
+    opacity: 0;
+  }
+}
 
 @keyframes reveal-fallback {
   to {

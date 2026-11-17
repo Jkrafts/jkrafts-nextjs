@@ -412,7 +412,7 @@ html.story-open body {
   line-height: 0.92;
   letter-spacing: -0.045em;
   font-weight: 600;
-  font-variation-settings: "wdth" 75, "opsz" 96;
+  font-variation-settings: "wdth" 75;
 }
 
 .story-lead {
@@ -427,7 +427,7 @@ html.story-open body {
   line-height: 1.12;
   letter-spacing: -0.025em;
   font-weight: 500;
-  font-variation-settings: "wdth" 85, "opsz" 48;
+  font-variation-settings: "wdth" 85;
   text-wrap: balance;
 }
 
@@ -523,7 +523,7 @@ html.story-open body {
   line-height: 0.8;
   letter-spacing: -0.06em;
   font-weight: 700;
-  font-variation-settings: "wdth" 75, "opsz" 96;
+  font-variation-settings: "wdth" 75;
   color: rgb(255 255 255 / 0.14);
   pointer-events: none;
 }

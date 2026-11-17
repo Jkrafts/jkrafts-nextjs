@@ -10,29 +10,25 @@ interface IFormInput {
   email: string;
   subject: string;
   message: string;
+  /** Honeypot: hidden from people, filled in by bots (see the function). */
+  company: string;
 }
+
+type VisibleField = Exclude<keyof IFormInput, "company">;
+const VISIBLE_FIELDS: VisibleField[] = ["name", "email", "subject", "message"];
 
 type Status = { kind: "idle" } | { kind: "sent" } | { kind: "error"; message: string };
 
 const fallbackError = `Your message couldn’t be sent. Try again, or email ${contact.email} directly.`;
 
-// The site is a static export, so the form posts straight to the Laravel API
-// (which must allow this origin via CORS). Set at build time.
-const CONTACT_ENDPOINT = process.env.NEXT_PUBLIC_LARAVEL_API_URL
-  ? `${process.env.NEXT_PUBLIC_LARAVEL_API_URL.replace(/\/$/, "")}/contact`
-  : null;
+// Handled by the route in app/api/contact/route.ts, which validates the
+// message and forwards it to the Laravel API server-side.
+const CONTACT_ENDPOINT = "/api/contact";
 
-// Laravel validation failures arrive as `{ message, errors }`; the
-// `{ error: { message } }` shape is also accepted.
-function readError(result: unknown): string {
-  if (!result || typeof result !== "object") return fallbackError;
-  const r = result as { error?: unknown; message?: unknown };
-  if (r.error && typeof r.error === "object" && "message" in r.error) {
-    const m = (r.error as { message?: unknown }).message;
-    if (typeof m === "string" && m.trim()) return m;
-  }
-  if (typeof r.message === "string" && r.message.trim()) return r.message;
-  return fallbackError;
+type ApiResult = { message?: unknown; errors?: Record<string, unknown> };
+
+function readMessage(result: ApiResult | null): string {
+  return typeof result?.message === "string" && result.message.trim() ? result.message : fallbackError;
 }
 
 const ContactForm = () => {
@@ -44,6 +40,7 @@ const ContactForm = () => {
     setValue,
     getValues,
     setFocus,
+    setError,
   } = useForm<IFormInput>({ shouldFocusError: true });
 
   const [status, setStatus] = useState<Status>({ kind: "idle" });
@@ -63,19 +60,25 @@ const ContactForm = () => {
 
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
     setStatus({ kind: "idle" });
-    if (!CONTACT_ENDPOINT) {
-      setStatus({ kind: "error", message: fallbackError });
-      return;
-    }
     try {
       const res = await fetch(CONTACT_ENDPOINT, {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
         body: JSON.stringify(data),
       });
-      const result = await res.json().catch(() => null);
+      const result = (await res.json().catch(() => null)) as ApiResult | null;
       if (!res.ok) {
-        setStatus({ kind: "error", message: readError(result) });
+        // Field-level errors (from the function or Laravel) go on their
+        // fields, and focus moves to the first one.
+        let focused = false;
+        for (const field of VISIBLE_FIELDS) {
+          const messages = result?.errors?.[field];
+          const message = Array.isArray(messages) ? messages[0] : undefined;
+          if (typeof message !== "string") continue;
+          setError(field, { type: "server", message }, { shouldFocus: !focused });
+          focused = true;
+        }
+        setStatus({ kind: "error", message: readMessage(result) });
         return;
       }
       setStatus({ kind: "sent" });
@@ -85,13 +88,13 @@ const ContactForm = () => {
     }
   };
 
-  const fieldProps = (name: keyof IFormInput) => ({
+  const fieldProps = (name: VisibleField) => ({
     id: `${id}-${name}`,
     "aria-invalid": errors[name] ? true : undefined,
     "aria-describedby": errors[name] ? `${id}-${name}-error` : undefined,
   });
 
-  const fieldError = (name: keyof IFormInput) =>
+  const fieldError = (name: VisibleField) =>
     errors[name] ? (
       <p id={`${id}-${name}-error`} className="field-error">
         {errors[name]?.message}
@@ -160,6 +163,13 @@ const ContactForm = () => {
           className="field resize-y"
         />
         {fieldError("message")}
+      </div>
+
+      {/* Honeypot. Off-screen rather than display:none (some bots skip
+          hidden fields), and out of the tab order and accessibility tree. */}
+      <div aria-hidden="true" className="absolute -left-[10000px] h-px w-px overflow-hidden">
+        <label htmlFor={`${id}-company`}>Company</label>
+        <input id={`${id}-company`} {...register("company")} tabIndex={-1} autoComplete="off" />
       </div>
 
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">

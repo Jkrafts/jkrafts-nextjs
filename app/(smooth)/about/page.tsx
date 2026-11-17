@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   description:
     "Learn more about Jkrafts, a creative developer focused on building elegant, user-centric digital products.",
   openGraph: {
-    title: "Learn about the process, values, and mindset behind my work",
+    title: "About Jkrafts",
     description:
       "Learn more about Jkrafts, a creative developer focused on building elegant, user-centric digital products.",
     images: [{ url: "/og/about.png", width: 1200, height: 630 }],
@@ -28,8 +28,8 @@ export default function About() {
   return (
     <main id="main">
       <PageIntro
-        title="Redefining the way brands exist online."
-        lead="Developer. Problem-solver. Digital craftsman."
+        title="Software that earns its keep."
+        lead="I design and build websites and business systems, from the first conversation to long after launch."
       />
 
       <section aria-labelledby="story-title" className="shell pb-[var(--section)]">
@@ -91,11 +91,11 @@ export default function About() {
             Beyond code
           </h2>
           <div className="col-span-4 flex flex-col gap-6 md:col-span-6 md:col-start-7">
-            <p className="t-lead">Great software is about more than just code.</p>
+            <p className="t-lead">Good software is mostly good decisions.</p>
             <p className="measure text-muted">
-              It’s about creating meaningful experiences that resonate with users and drive real-world impact.
-              I focus on understanding your vision and translating it into digital solutions that not only
-              function flawlessly but also inspire and engage.
+              Most of the work happens before any code: learning how the business really runs, where time
+              and money leak, and what the people using the system need on a busy day. The code follows
+              from those decisions, which is why it lasts.
             </p>
           </div>
 

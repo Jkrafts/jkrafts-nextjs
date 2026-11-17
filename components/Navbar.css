@@ -252,7 +252,7 @@ html.pt-header .site-header :is(.site-nav, .site-nav-link, .menu-toggle, button)
   line-height: 1;
   letter-spacing: -0.04em;
   font-weight: 600;
-  font-variation-settings: "wdth" 75, "opsz" 96;
+  font-variation-settings: "wdth" 75;
   will-change: transform;
 }
 

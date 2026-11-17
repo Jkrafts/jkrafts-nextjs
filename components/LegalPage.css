@@ -1,0 +1,100 @@
+/* Reading styles for the policy pages (components/LegalPage.tsx). */
+
+.legal > section {
+  scroll-margin-top: calc(var(--header-h) + 1.5rem);
+  max-width: 64ch;
+}
+
+.legal > section + section {
+  margin-top: clamp(3rem, 6vw, 4.5rem);
+}
+
+.legal p,
+.legal ul,
+.legal table,
+.legal pre {
+  margin-top: 1rem;
+}
+
+.legal p,
+.legal li {
+  color: var(--ink-muted);
+  line-height: 1.65;
+}
+
+.legal strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.legal ul {
+  padding-left: 1.25rem;
+  list-style: square;
+}
+
+.legal li + li {
+  margin-top: 0.4rem;
+}
+
+.legal li::marker {
+  color: var(--lilac);
+}
+
+.legal a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.22em;
+}
+
+.legal a:hover {
+  text-decoration-thickness: 2px;
+}
+
+/* Tables scroll sideways on narrow screens rather than squashing. */
+.legal .table-wrap {
+  margin-top: 1rem;
+  overflow-x: auto;
+}
+
+.legal table {
+  width: 100%;
+  margin-top: 0;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+}
+
+.legal th,
+.legal td {
+  padding: 0.75rem 1rem 0.75rem 0;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  vertical-align: top;
+}
+
+.legal th {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.legal td {
+  color: var(--ink-muted);
+}
+
+.legal code {
+  font-size: 0.9em;
+  color: var(--ink);
+}
+
+.legal pre {
+  max-height: 28rem;
+  overflow: auto;
+  padding: 1.25rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper-raised);
+  color: var(--ink-muted);
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  white-space: pre-wrap;
+}

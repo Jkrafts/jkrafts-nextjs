@@ -8,6 +8,14 @@ export const navItems = [
   { label: "Contact", href: "/contact" },
 ] as const;
 
+export const legalItems = [
+  { label: "Privacy", href: "/privacy" },
+  { label: "Cookies", href: "/cookies" },
+  { label: "Terms", href: "/terms" },
+  { label: "Security", href: "/security" },
+  { label: "Licences", href: "/licenses" },
+] as const;
+
 export const contact = {
   email: "info@jkrafts.com",
   phoneDisplay: "+44 7413 049561",

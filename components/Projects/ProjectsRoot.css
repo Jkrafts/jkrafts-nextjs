@@ -87,7 +87,7 @@
   line-height: 0.8;
   letter-spacing: -0.06em;
   font-weight: 700;
-  font-variation-settings: "wdth" 75, "opsz" 96;
+  font-variation-settings: "wdth" 75;
   color: rgb(255 255 255 / 0.16);
   pointer-events: none;
   user-select: none;
@@ -111,7 +111,7 @@
   line-height: 1.1;
   letter-spacing: -0.02em;
   font-weight: 600;
-  font-variation-settings: "wdth" 85, "opsz" 32;
+  font-variation-settings: "wdth" 85;
   text-wrap: balance;
 }
 

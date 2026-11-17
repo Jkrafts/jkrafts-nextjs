@@ -101,16 +101,16 @@ export default function Hero() {
 
       <div className="shell pt-[calc(var(--header-h)+3rem)] pb-[clamp(2rem,5vw,3.5rem)]">
         <h1 id="hero-title" data-intro data-hero-title className="t-display">
-          <span className="block">Websites &amp; systems,</span>
-          <span className="block">crafted to last.</span>
+          <span className="block">Built properly,</span>
+          <span className="block">the first time.</span>
         </h1>
 
         <div className="mt-[clamp(2rem,5vw,4rem)]">
           <div data-intro data-hero-rule className="h-px bg-line-strong" />
           <div className="grid-12 gap-y-8 pt-6">
-            <p data-intro data-hero-rest className="t-lead col-span-4 max-w-[34ch] md:col-span-6">
-              Jkrafts designs and builds websites, web apps and business systems that look sharp and
-              solve real problems.
+            <p data-intro data-hero-rest className="t-lead col-span-4 max-w-[36ch] md:col-span-6">
+              Websites, web apps and business systems for companies that would rather not build
+              them twice.
             </p>
             <div
               data-intro
@@ -118,15 +118,15 @@ export default function Hero() {
               className="col-span-4 flex flex-col gap-5 md:col-span-6 md:items-end lg:col-span-5 lg:col-start-8"
             >
               <div className="flex flex-wrap gap-3">
-                <a href="#work" className="btn btn-primary cursor-target">
-                  See selected work
-                </a>
-                <CursorLink href="/contact" className="btn btn-outline">
+                <CursorLink href="/contact" className="btn btn-primary">
                   Start a project
                 </CursorLink>
+                <a href="#work" className="btn btn-outline cursor-target">
+                  See the results
+                </a>
               </div>
               <p className="t-small flex items-center gap-2.5 text-muted">
-                <span className="mark" aria-hidden="true" />
+                <span className="mark mark-live" aria-hidden="true" />
                 Available for new projects and long-term work
               </p>
             </div>

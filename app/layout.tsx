@@ -1,16 +1,17 @@
 import type { Metadata, Viewport } from "next";
-import { Bricolage_Grotesque } from "next/font/google";
-import { GoogleTagManager, GoogleAnalytics } from "@next/third-parties/google";
+import { Archivo } from "next/font/google";
 import ThemeProvider from "@/src/theme-provider";
 import TargetCursor from "@/components/TargetCursor";
+import Analytics from "@/components/Analytics";
+import CookieBanner from "@/components/CookieBanner";
 import { siteConfig } from "@/lib/seo";
 
 import "./globals.css";
 
 export const metadata: Metadata = {
   title: {
-    default: "Jkrafts — Websites and web systems, crafted to last",
-    template: "%s — Jkrafts",
+    default: "Jkrafts | Websites and business systems, built properly",
+    template: "%s | Jkrafts",
   },
   description: siteConfig.description,
   metadataBase: new URL(siteConfig.url),
@@ -39,18 +40,19 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f1f0f6" },
+    { media: "(prefers-color-scheme: light)", color: "#f3f3f2" },
     { media: "(prefers-color-scheme: dark)", color: "#0d0b22" },
   ],
 };
 
-// One variable family carries the whole identity. The width (wdth) and
-// optical size (opsz) axes let display headings run narrow and tight while
-// body copy stays at full width.
-const bricolage = Bricolage_Grotesque({
+// One variable family carries the whole identity. Archivo's width axis
+// (wdth 62–125) lets display headings run condensed and tight while body
+// copy stays at normal width. next/font self-hosts the files, so visitors'
+// browsers never request anything from Google Fonts.
+const archivo = Archivo({
   subsets: ["latin"],
-  variable: "--font-bricolage",
-  axes: ["opsz", "wdth"],
+  variable: "--font-archivo",
+  axes: ["wdth"],
   display: "swap",
 });
 
@@ -64,17 +66,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning className={bricolage.variable}>
+    <html lang="en" suppressHydrationWarning className={archivo.variable}>
       <head>
         <script dangerouslySetInnerHTML={{ __html: jsFlag }} />
       </head>
-      {/*
-        GTM-* is a Tag Manager container id; G-* is a GA4 Measurement id.
-        Mounting <GoogleTagManager> twice produced two elements with the same
-        id (`_next-gtm`), so the GA4 id uses <GoogleAnalytics> instead.
-      */}
-      <GoogleTagManager gtmId="GTM-PXL6NLM5" />
-      <GoogleAnalytics gaId="G-8YGCX4RECJ" />
+      {/* Analytics loads only after consent (components/Analytics.tsx). */}
+      <Analytics />
       <body className="overflow-x-clip">
         <a href="#main" className="skip-link">
           Skip to content
@@ -87,6 +84,7 @@ export default function RootLayout({
         >
           <TargetCursor />
           {children}
+          <CookieBanner />
         </ThemeProvider>
       </body>
     </html>

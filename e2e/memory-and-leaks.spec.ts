@@ -4,6 +4,9 @@ import { forceGC, getHeapSize, snapshotInstrumentation } from './helpers';
 
 test.describe('Memory & resource leak detection across SPA navigation', () => {
   test('GL contexts, rAF loops, listeners and heap growth over repeated navigation', async ({ page }) => {
+    // 24 full page loads, each waiting for the network to go quiet: more
+    // than the default 60s on a busy machine.
+    test.setTimeout(120_000);
     await page.addInitScript(installInstrumentation);
 
     await page.goto('/', { waitUntil: 'networkidle' });
