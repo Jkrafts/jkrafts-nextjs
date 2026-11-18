@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import LegalPage, { type LegalSection } from "@/components/LegalPage";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Licences",
   description: "The font and third-party software this site uses, and the licences they are used under.",
-};
+  path: "/licenses",
+});
 
 const libraries: { name: string; use: string; licence: string; href: string }[] = [
   { name: "Next.js", use: "Site framework", licence: "MIT", href: "https://github.com/vercel/next.js" },

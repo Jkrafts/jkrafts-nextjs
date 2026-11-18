@@ -1,19 +1,17 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import PageIntro from "@/components/PageIntro";
 import ProjectsRoot from "@/components/Projects/ProjectsRoot";
 import CtaBand from "@/components/CtaBand";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Projects",
+  socialTitle: "Project stories from Jkrafts",
   description:
-    "Explore selected projects by Jkrafts showcasing web development, UI engineering, and creative problem solving.",
-  openGraph: {
-    title: "Selected projects showcasing strategy, craft, and execution",
-    description:
-      "Explore selected projects by Jkrafts showcasing web development, UI engineering, and creative problem solving.",
-    images: [{ url: "/og/projects.png", width: 1200, height: 630 }],
-  },
-};
+    "Project stories from Jkrafts: bar and retail point-of-sale systems, a catering website and SaaS work. The challenge, the build and the result.",
+  path: "/projects",
+  image: "/og/projects.png",
+});
 
 export default function ProjectsPage() {
   return (

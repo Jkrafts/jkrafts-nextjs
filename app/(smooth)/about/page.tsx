@@ -1,18 +1,16 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import PageIntro from "@/components/PageIntro";
 import CtaBand from "@/components/CtaBand";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "About",
+  socialTitle: "About Jkrafts",
   description:
-    "Learn more about Jkrafts, a creative developer focused on building elegant, user-centric digital products.",
-  openGraph: {
-    title: "About Jkrafts",
-    description:
-      "Learn more about Jkrafts, a creative developer focused on building elegant, user-centric digital products.",
-    images: [{ url: "/og/about.png", width: 1200, height: 630 }],
-  },
-};
+    "How Jkrafts works: one developer designing and building websites and business systems, from first call to long after launch.",
+  path: "/about",
+  image: "/og/about.png",
+});
 
 const steps = [
   { name: "Discover", body: "Understand your goals and constraints." },

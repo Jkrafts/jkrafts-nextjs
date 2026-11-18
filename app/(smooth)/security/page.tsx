@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import LegalPage, { type LegalSection } from "@/components/LegalPage";
 import { contact } from "@/lib/site";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Security",
   description: "How this site and the systems Jkrafts builds are kept secure, and how to report a vulnerability.",
-};
+  path: "/security",
+});
 
 const sections: LegalSection[] = [
   {

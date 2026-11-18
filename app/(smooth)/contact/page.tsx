@@ -1,20 +1,18 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import PageIntro from "@/components/PageIntro";
 import ContactForm from "@/components/ContactForm";
 import Icon, { type IconName } from "@/components/Icon";
 import { contact, socials } from "@/lib/site";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Contact",
+  socialTitle: "Contact Jkrafts",
   description:
-    "Get in touch with Jkrafts to discuss your project, collaboration opportunities, or creative ideas.",
-  openGraph: {
-    title: "Contact Jkrafts",
-    description:
-      "Get in touch with Jkrafts to discuss your project, collaboration opportunities, or creative ideas.",
-    images: [{ url: "/og/contact.png", width: 1200, height: 630 }],
-  },
-};
+    "Tell Jkrafts about your website, web app or business system project. Replies within one working day.",
+  path: "/contact",
+  image: "/og/contact.png",
+});
 
 type Channel = { label: string; value: string; href: string; icon: IconName; external?: boolean };
 

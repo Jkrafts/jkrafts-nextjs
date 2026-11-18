@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import LegalPage, { type LegalSection } from "@/components/LegalPage";
 import CookieSettingsButton from "@/components/CookieSettingsButton";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Cookie policy",
   description: "The cookies and browser storage this site uses, and how to change your choice.",
-};
+  path: "/cookies",
+});
 
 const sections: LegalSection[] = [
   {

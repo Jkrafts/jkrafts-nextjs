@@ -4,38 +4,24 @@ import ThemeProvider from "@/src/theme-provider";
 import TargetCursor from "@/components/TargetCursor";
 import Analytics from "@/components/Analytics";
 import CookieBanner from "@/components/CookieBanner";
-import { siteConfig } from "@/lib/seo";
+import { SITE_URL, isIndexable, siteConfig } from "@/lib/seo";
 
 import "./globals.css";
 
+// Site-wide defaults. Each page sets its own complete metadata with
+// pageMetadata() (lib/seo), including its canonical URL.
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "Jkrafts | Websites and business systems, built properly",
     template: "%s | Jkrafts",
   },
   description: siteConfig.description,
-  metadataBase: new URL(siteConfig.url),
-  openGraph: {
-    title: siteConfig.name,
-    description: siteConfig.description,
-    url: siteConfig.url,
-    siteName: siteConfig.name,
-    images: [
-      {
-        url: siteConfig.ogImage,
-        width: 1200,
-        height: 630,
-        alt: siteConfig.name,
-      },
-    ],
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: siteConfig.name,
-    description: siteConfig.description,
-    images: [siteConfig.ogImage],
-  },
+  applicationName: siteConfig.name,
+  // Only production deploys may be indexed (see isIndexable).
+  robots: isIndexable
+    ? { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large" } }
+    : { index: false, follow: false, googleBot: { index: false, follow: false } },
 };
 
 export const viewport: Viewport = {

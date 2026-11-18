@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import CursorLink from "@/components/TargetCursor/CursorLink";
 import LegalPage, { type LegalSection } from "@/components/LegalPage";
 import { contact } from "@/lib/site";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Terms of service",
-  description: "The terms for using the Jkrafts website.",
-};
+  description: "The terms for using the Jkrafts website, who owns its content, and how project work is agreed.",
+  path: "/terms",
+});
 
 // Bracketed values are details only the business can confirm; replace them
 // before launch.

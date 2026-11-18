@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import CursorLink from "@/components/TargetCursor/CursorLink";
 import LegalPage, { type LegalSection } from "@/components/LegalPage";
 import { contact } from "@/lib/site";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Privacy policy",
   description: "What personal data Jkrafts collects, why, how long it is kept and your rights over it.",
-};
+  path: "/privacy",
+});
 
 // Bracketed values are details only the business can confirm; replace them
 // before launch.
