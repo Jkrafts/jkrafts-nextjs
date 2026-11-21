@@ -367,3 +367,206 @@ export function completeStoryReturn(
       .to([entry.overlay.panel, label], { opacity: 0, duration: 0.3, ease: 'power1.out' }, 0.95);
   });
 }
+
+/* ---------------------------------------------------------------------------
+   /projects tile ↔ story (same page)
+   ---------------------------------------------------------------------------
+   Unlike the home transition (a colour panel clipped open from a row), the
+   tile itself grows: a copy of the card is laid over it and its box is
+   animated to the story frame. Its chapter bars stretch into the story's
+   progress bars, the title rides down with it, and the details fade out.
+   The story then opens instantly underneath and the copy hands off.
+   Closing plays it in reverse, back into the tile. */
+
+type TileGrow = {
+  root: HTMLDivElement;
+  backdrop: HTMLDivElement;
+  card: HTMLElement;
+  /** The cover's fall-off to ink, under the pattern. */
+  shade: HTMLSpanElement;
+  /** Category, monogram, tagline and call to action: fade first. */
+  details: HTMLElement[];
+  title: HTMLElement | null;
+  /** The real tile, hidden while its copy is in flight. */
+  tile: HTMLElement;
+};
+
+/** Tile padding at rest, and where the story's progress bars sit. */
+const TILE_PADDING = '1.25rem';
+const FRAME_PADDING = '14px 16px';
+
+let tileGrow: { overlay: TileGrow; tl: gsap.core.Timeline } | null = null;
+
+function createTileOverlay(tile: HTMLElement, box: Box): TileGrow {
+  const root = document.createElement('div');
+  root.className = 'story-transition';
+  root.setAttribute('aria-hidden', 'true');
+  Object.assign(root.style, {
+    position: 'fixed',
+    left: '0',
+    top: '0',
+    width: `${window.innerWidth}px`,
+    height: `${window.innerHeight}px`,
+    zIndex: '1100',
+    pointerEvents: 'auto',
+  });
+
+  const backdrop = document.createElement('div');
+  Object.assign(backdrop.style, {
+    position: 'absolute',
+    inset: '0',
+    background: backdropColour(),
+    opacity: '0',
+  });
+
+  // A copy of the tile (it keeps the accent and pattern variables from its
+  // inline style), made inert so it can't take focus.
+  const card = tile.cloneNode(true) as HTMLElement;
+  card.inert = true;
+  card.removeAttribute('aria-haspopup');
+  Object.assign(card.style, {
+    position: 'absolute',
+    left: `${box.left}px`,
+    top: `${box.top}px`,
+    width: `${box.width}px`,
+    height: `${box.height}px`,
+    margin: '0',
+    padding: TILE_PADDING,
+    aspectRatio: 'auto',
+    borderRadius: `${box.radius}px`,
+    transition: 'none',
+    willChange: 'left, top, width, height',
+    // The copy carries the tile's inline style, which is `hidden` while its
+    // story is open (see playTileEnter).
+    visibility: 'visible',
+  });
+
+  // Same fall-off as the story cover (.story-surface), beneath the pattern
+  // (which sits at z-index -1 inside the card's isolated stacking context).
+  const shade = document.createElement('span');
+  Object.assign(shade.style, {
+    position: 'absolute',
+    inset: '0',
+    zIndex: '-2',
+    backgroundImage: 'linear-gradient(180deg, transparent 35%, rgb(13 11 34 / 0.45))',
+    opacity: '0',
+  });
+  card.prepend(shade);
+
+  root.append(backdrop, card);
+  document.body.append(root);
+
+  return {
+    root,
+    backdrop,
+    card,
+    shade,
+    details: Array.from(
+      card.querySelectorAll<HTMLElement>(
+        '.story-tile-category, .story-tile-monogram, .story-tile-tagline, .story-tile-cta',
+      ),
+    ),
+    title: card.querySelector<HTMLElement>('.story-tile-title'),
+    tile,
+  };
+}
+
+/** Stop a grow in progress and put the page back as it was. */
+function clearTileGrow() {
+  if (!tileGrow) return;
+  tileGrow.tl.kill();
+  tileGrow.overlay.tile.style.visibility = '';
+  tileGrow.overlay.root.remove();
+  tileGrow = null;
+}
+
+const boxProps = (box: Box) => ({
+  left: box.left,
+  top: box.top,
+  width: box.width,
+  height: box.height,
+  borderRadius: box.radius,
+});
+
+/**
+ * Grow `tile` into the story frame, then call `open`, which must show the
+ * story instantly (no entrance of its own) so the copy can fade over it,
+ * and return whether it opened. The tile stays hidden until
+ * `playTileReturn` (or `restoreTile`) brings it back.
+ */
+export function playTileEnter(tile: HTMLElement, open: () => boolean) {
+  clearTileGrow();
+  const from = toBox(tile);
+  const frame = storyFrame();
+  const overlay = createTileOverlay(tile, from);
+  tile.style.visibility = 'hidden';
+
+  const tl = gsap
+    .timeline({
+      onComplete: () => {
+        tileGrow = null;
+        // The tile stays hidden while its story is open: the card *became*
+        // the story, so its slot stays empty until playTileReturn lands it.
+        // If the story didn't open, put it straight back.
+        if (!open()) tile.style.visibility = '';
+        // A frame later, so the story has painted underneath.
+        requestAnimationFrame(() =>
+          gsap.to(overlay.root, {
+            opacity: 0,
+            duration: 0.2,
+            ease: 'power1.out',
+            onComplete: () => overlay.root.remove(),
+          }),
+        );
+      },
+    })
+    .to(overlay.details, { opacity: 0, duration: 0.2, ease: 'power1.in' }, 0)
+    .to(overlay.backdrop, { opacity: 1, duration: 0.5, ease: 'power2.out' }, 0)
+    .to(overlay.card, { ...boxProps(frame), padding: FRAME_PADDING, duration: 0.75, ease: EASE }, 0)
+    .to(overlay.shade, { opacity: 1, duration: 0.4, ease: 'power1.out' }, 0.3)
+    .to(overlay.title, { opacity: 0, duration: 0.25, ease: 'power1.in' }, 0.45);
+
+  tileGrow = { overlay, tl };
+}
+
+/**
+ * Cover the open story with the copy at full size (call before the story
+ * hides), then shrink it back into `tile`. `done` runs once the tile is
+ * showing again, e.g. to return focus to it.
+ */
+export function playTileReturn(tile: HTMLElement, done: () => void) {
+  clearTileGrow();
+  const frame = storyFrame();
+  const to = toBox(tile);
+  const overlay = createTileOverlay(tile, frame);
+  overlay.backdrop.style.opacity = '1';
+  overlay.shade.style.opacity = '1';
+  overlay.card.style.padding = FRAME_PADDING;
+  for (const el of [...overlay.details, overlay.title]) if (el) el.style.opacity = '0';
+  tile.style.visibility = 'hidden';
+
+  const tl = gsap
+    .timeline({
+      onComplete: () => {
+        tile.style.visibility = '';
+        overlay.root.remove();
+        tileGrow = null;
+        done();
+      },
+    })
+    .to(overlay.card, { ...boxProps(to), padding: TILE_PADDING, duration: 0.7, ease: EASE }, 0)
+    .to(overlay.shade, { opacity: 0, duration: 0.35, ease: 'power1.in' }, 0.1)
+    .to(overlay.backdrop, { opacity: 0, duration: 0.5, ease: 'power2.inOut' }, 0.15)
+    .to(overlay.title, { opacity: 1, duration: 0.25, ease: 'power1.out' }, 0.4)
+    .to(overlay.details, { opacity: 1, duration: 0.25, ease: 'power1.out' }, 0.5);
+
+  tileGrow = { overlay, tl };
+}
+
+/** Show a tile hidden by `playTileEnter` without animating it back. */
+export function restoreTile(tile: HTMLElement) {
+  tile.style.visibility = '';
+}
+
+/** True while a tile is growing into, or shrinking from, its story. */
+export const isTileTransitionActive = () => tileGrow !== null;

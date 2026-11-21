@@ -10,9 +10,14 @@ import Icon from '@/components/Icon';
 import {
   completeStoryEnter,
   hasIncomingStory,
+  isTileTransitionActive,
   playStoryReturn,
+  playTileEnter,
+  playTileReturn,
   prefersReducedMotion,
+  restoreTile,
 } from '@/lib/storyTransition';
+import { useLenis } from '@/providers/LenisProvider';
 
 import 'swiper/css';
 import './ProjectsRoot.css';
@@ -23,6 +28,27 @@ const ProjectsRoot = () => {
   // Set when the story was entered from the home page's work index, so
   // closing it returns there (see lib/storyTransition).
   const enteredFromHomeRef = useRef(false);
+  // Set when the story grew out of a tile on this page, so closing it
+  // shrinks back into that tile.
+  const enteredFromTileRef = useRef<{ index: number; tile: HTMLElement } | null>(null);
+  const lenis = useLenis();
+
+  const openFromTile = (index: number, tile: HTMLElement) => {
+    if (isTileTransitionActive()) return;
+    if (prefersReducedMotion()) {
+      storyRef.current?.open(index);
+      return;
+    }
+    enteredFromTileRef.current = { index, tile };
+    // Hold the page still while the tile grows (open() keeps it stopped).
+    lenis?.stop();
+    playTileEnter(tile, () => {
+      if (storyRef.current?.open(index, { instant: true })) return true;
+      enteredFromTileRef.current = null;
+      lenis?.start();
+      return false;
+    });
+  };
 
   // Deep link: /projects?story=<id> opens that story straight away (used by
   // the work index on the home page).
@@ -40,9 +66,32 @@ const ProjectsRoot = () => {
     }
   }, []);
 
+  // Drop the query string once the story is closed so a refresh doesn't
+  // reopen it.
+  const handleClose = useCallback(() => {
+    const url = new URL(window.location.href);
+    if (url.searchParams.has('story')) {
+      url.searchParams.delete('story');
+      window.history.replaceState(window.history.state, '', url.pathname + url.search + url.hash);
+    }
+  }, []);
+
   // A story entered from the home page closes back into its row there.
   const handleReturn = useCallback(
     (projectIndex: number) => {
+      const fromTile = enteredFromTileRef.current;
+      enteredFromTileRef.current = null;
+      if (fromTile && fromTile.index === projectIndex && fromTile.tile.isConnected && !prefersReducedMotion()) {
+        const { tile } = fromTile;
+        playTileReturn(tile, () => {
+          tile.focus({ preventScroll: true });
+          handleClose();
+        });
+        return true;
+      }
+      // Closing without the shrink (e.g. reduced motion switched on while
+      // the story was open): bring the hidden tile straight back.
+      if (fromTile) restoreTile(fromTile.tile);
       if (!enteredFromHomeRef.current || prefersReducedMotion()) return false;
       const project = projects[projectIndex];
       if (!project) return false;
@@ -62,18 +111,9 @@ const ProjectsRoot = () => {
       });
       return true;
     },
-    [router],
+    [router, handleClose],
   );
 
-  // Drop the query string once the story is closed so a refresh doesn't
-  // reopen it.
-  const handleClose = useCallback(() => {
-    const url = new URL(window.location.href);
-    if (url.searchParams.has('story')) {
-      url.searchParams.delete('story');
-      window.history.replaceState(window.history.state, '', url.pathname + url.search + url.hash);
-    }
-  }, []);
 
   return (
     <section aria-labelledby="stories-title" className="overflow-x-clip pb-[var(--section)]">
@@ -118,7 +158,7 @@ const ProjectsRoot = () => {
                 type="button"
                 className="story-tile"
                 style={{ '--accent': project.accentColor, ...patternStyle(project) } as React.CSSProperties}
-                onClick={() => storyRef.current?.open(index)}
+                onClick={(e) => openFromTile(index, e.currentTarget)}
                 aria-haspopup="dialog"
               >
                 <span className="story-tile-bars" aria-hidden="true">

@@ -22,10 +22,13 @@ test.describe('Project pattern contrast', () => {
     });
   }
 
-  test('patterns are deterministic, unique, and each project has its own family', () => {
+  test('patterns are deterministic, unique, and neighbours never share a family', () => {
     const images = projects.map((p) => getPattern(p).image);
     expect(new Set(images).size).toBe(projects.length);
-    expect(new Set(projects.map((p) => getPattern(p).variant)).size).toBe(projects.length);
+    // More projects than families, so families repeat, but never side by
+    // side in the work list or the /projects row.
+    const variants = projects.map((p) => getPattern(p).variant);
+    variants.slice(1).forEach((v, i) => expect(v, `${projects[i].id} → ${projects[i + 1].id}`).not.toBe(variants[i]));
     expect(projects.map((p) => getPattern(p).image)).toEqual(images);
   });
 });

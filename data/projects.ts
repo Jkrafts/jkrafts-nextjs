@@ -151,6 +151,52 @@ export const projects: ProjectStory[] = [
     ]
   },
   {
+    id: 'quality-diagnostics',
+    title: 'Quality Diagnostics Labs',
+    shortTagline: 'A clear, credible website for a Massachusetts diagnostic laboratory.',
+    category: 'Website',
+    skills: ['Laravel', 'Livewire', 'Filament', 'GSAP', 'Accessibility', 'Technical SEO'],
+    accentColor: '#0f766e',
+    pattern: 'plots',
+    slides: [
+      {
+        id: 'cover',
+        type: 'cover',
+        title: 'Quality Diagnostics Labs',
+        body: 'Wellness blood tests and confidential drug screening in North Andover, Massachusetts.'
+      },
+      {
+        id: 'problem',
+        type: 'challenge',
+        title: 'The challenge',
+        body: 'The old site looked generic and gave patients little reason to trust it. People needed to see what each test costs and how to prepare before they called, and staff needed to update details without a developer.'
+      },
+      {
+        id: 'craft',
+        type: 'craft',
+        title: 'The craft',
+        bullets: [
+          'Every test and price published, from one source',
+          'Online appointment requests, stored and emailed to staff',
+          'Contact details and messages managed in a Filament admin',
+          'Medical structured data, sitemap and SEO metadata',
+          'Accessible pages, cookie consent and privacy and security policies'
+        ]
+      },
+      {
+        id: 'process',
+        type: 'process',
+        title: 'Built with'
+      },
+      {
+        id: 'result',
+        type: 'result',
+        title: 'The result',
+        body: 'Patients see the test, the price and the preparation up front and can request a visit online, and the lab keeps its own details current.'
+      }
+    ]
+  },
+  {
     id: 'servpure',
     title: 'ServPure Water Shop System',
     shortTagline: 'Sales, production and stock for a bottled-water business.',

@@ -166,13 +166,49 @@ test.describe('Project stories', () => {
     await expect(page.locator('a[data-story="liqa"]')).toBeInViewport();
   });
 
+  test('a tile grows into its story and shrinks back into the tile on close', async ({ page }) => {
+    await page.goto('/projects', { waitUntil: 'networkidle' });
+    const tile = page.locator('.story-tile').nth(1);
+    await tile.click();
+    // The tile's copy is in flight (visibly) and the real tile is hidden under it.
+    await expect(page.locator('.story-transition')).toHaveCount(1);
+    await expect(page.locator('.story-transition .story-tile')).toHaveCSS('visibility', 'visible');
+    await expect(tile).toHaveCSS('visibility', 'hidden');
+    // Hand-off: the story is open and the overlay gone.
+    await expect(page.locator('.stories-slider-in')).toHaveCount(1);
+    await expect(page.locator('.story-transition')).toHaveCount(0);
+    // The card became the story, so its slot stays empty while it's open.
+    await expect(tile).toHaveCSS('visibility', 'hidden');
+
+    await page.keyboard.press('Escape');
+    // The shrinking card must actually be visible, not just present.
+    const flying = page.locator('.story-transition .story-tile');
+    await expect(flying).toHaveCount(1);
+    await expect(flying).toHaveCSS('visibility', 'visible');
+    const sizes: number[] = [];
+    for (let i = 0; i < 4; i++) {
+      const box = await flying.boundingBox().catch(() => null);
+      if (box) sizes.push(box.height);
+      await page.waitForTimeout(120);
+    }
+    // It shrinks towards the tile over several frames, rather than jumping.
+    expect(sizes.length).toBeGreaterThanOrEqual(2);
+    expect(sizes[sizes.length - 1]).toBeLessThan(sizes[0]);
+    await expect(page.locator('.story-transition')).toHaveCount(0);
+    await expect(tile).toBeFocused();
+    await expect(tile).toHaveCSS('visibility', 'visible');
+    expect(await page.evaluate(() => document.documentElement.classList.contains('story-open'))).toBe(false);
+  });
+
   test('slide colours and patterns survive Swiper wiping slide styles', async ({ page }) => {
     // Swiper's destroy() removes every slide's style attribute (it runs
     // whenever the slider is re-created, e.g. React dev double effects), so
     // the accent and pattern must not live there.
     await page.goto('/projects', { waitUntil: 'networkidle' });
     await page.locator('.story-tile').nth(1).click();
-    await page.waitForTimeout(600);
+    // The tile grows into the story first; wait for the hand-off.
+    await expect(page.locator('.stories-slider-in')).toHaveCount(1);
+    await expect(page.locator('.story-transition')).toHaveCount(0);
     const surface = () =>
       page.evaluate(() => {
         const el = document.querySelector(
