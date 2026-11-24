@@ -4,8 +4,9 @@
 # Netlify Image CDN. It also caches Next's hashed build files itself.
 #
 # Environment variables (Site configuration → Environment variables):
-#   LARAVEL_API_URL    required, scope: Functions
-#   LARAVEL_API_TOKEN  optional, scope: Functions
+#   CONTACT_API_URL  required, scope: Functions — the backend API base,
+#                    e.g. https://admin.jkrafts.com/api/v1
+#   CONTACT_API_KEY  required, scope: Functions — the backend's CONTACT_API_KEY
 
 [build]
   command = "npm run build"

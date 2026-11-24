@@ -1,26 +1,36 @@
+import { BUDGET_RANGES, PHONE_PATTERN, SERVICE_INTERESTS } from "@/lib/contactOptions";
+
 /**
  * POST /api/contact: receives the contact form and forwards it to the
- * Laravel API, server to server. On Netlify this route handler runs as a
- * serverless function; locally it runs under `next dev` / `next start`.
+ * JKrafts backend (Laravel), server to server. On Netlify this route handler
+ * runs as a serverless function; locally it runs under `next dev` / `next start`.
  *
  * Doing the hand-off here (rather than posting from the browser straight to
- * Laravel) keeps the Laravel URL and any credentials out of the page, needs
- * no CORS on the Laravel side, and lets obvious junk be rejected before it
- * costs Laravel anything. Other methods get Next's automatic 405.
+ * Laravel) keeps the backend URL and API key out of the page, needs no CORS
+ * on the backend, and lets obvious junk be rejected before it costs the
+ * backend anything. Other methods get Next's automatic 405.
  *
  * Environment (read at request time, never sent to the browser; on Netlify:
  * Site configuration → Environment variables, scoped to Functions):
- * - LARAVEL_API_URL    required, e.g. https://api.jkrafts.com/api
- * - LARAVEL_API_TOKEN  optional; sent as a bearer token if set
+ * - CONTACT_API_URL  required, the backend API base, e.g. https://admin.jkrafts.com/api/v1
+ * - CONTACT_API_KEY  required, the backend's CONTACT_API_KEY, sent as X-Api-Key
+ *
+ * The backend contract is POST {CONTACT_API_URL}/contact-submissions with
+ * X-Api-Key; it trusts X-Client-Ip and X-Client-User-Agent (the visitor's,
+ * not this server's) only after the key matches, and rate-limits per visitor.
  *
  * Responses are JSON `{ message, errors? }`. Validation failures (here or
- * from Laravel) are 422 with per-field `errors`; anything that goes wrong
+ * from the backend) are 422 with per-field `errors`; anything that goes wrong
  * upstream is a generic 502, with the detail logged rather than returned.
  */
 
-const LIMITS = { name: 120, email: 254, subject: 200, message: 5000 } as const;
-type Field = keyof typeof LIMITS;
-const FIELDS = Object.keys(LIMITS) as Field[];
+const REQUIRED = { name: 120, email: 254, subject: 200, message: 5000 } as const;
+type RequiredField = keyof typeof REQUIRED;
+const REQUIRED_FIELDS = Object.keys(REQUIRED) as RequiredField[];
+
+type OptionalField = "company" | "phone" | "service_interest" | "budget_range";
+type Field = RequiredField | OptionalField;
+
 const MAX_BODY_BYTES = 16 * 1024;
 const UPSTREAM_TIMEOUT_MS = 10_000;
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -38,6 +48,20 @@ const unavailable = () =>
 function hostOf(origin: string) {
   try {
     return new URL(origin).host;
+  } catch {
+    return null;
+  }
+}
+
+const text = (value: unknown) => (typeof value === "string" ? value.trim() : "");
+
+/** The path of the page the form was sent from, when the referrer is this site. */
+function sourcePage(req: Request, host: string | null) {
+  const referer = req.headers.get("referer");
+  if (!referer) return null;
+  try {
+    const url = new URL(referer);
+    return url.host === host ? url.pathname.slice(0, 2048) : null;
   } catch {
     return null;
   }
@@ -69,64 +93,93 @@ export async function POST(req: Request) {
 
   // Honeypot: a field people never see. Bots that fill it get a normal
   // success, so they learn nothing, and nothing is sent.
-  if (typeof input.company === "string" && input.company.trim() !== "") {
+  if (text(input.website_url) !== "") {
     return json(200, { message: "Thanks. Your message has been sent." });
   }
 
-  const data = {} as Record<Field, string>;
+  const data: Partial<Record<Field | "source_page", string>> = {};
   const errors: Partial<Record<Field, string[]>> = {};
-  for (const field of FIELDS) {
-    const value = typeof input[field] === "string" ? (input[field] as string).trim() : "";
+
+  for (const field of REQUIRED_FIELDS) {
+    const value = text(input[field]);
     if (!value) errors[field] = [`The ${field} field is required.`];
-    else if (value.length > LIMITS[field]) errors[field] = [`The ${field} must be at most ${LIMITS[field]} characters.`];
+    else if (value.length > REQUIRED[field]) errors[field] = [`The ${field} must be at most ${REQUIRED[field]} characters.`];
     data[field] = value;
   }
-  if (!errors.email && !EMAIL.test(data.email)) errors.email = ["Enter a valid email address."];
+  if (!errors.email && !EMAIL.test(data.email ?? "")) errors.email = ["Enter a valid email address."];
+
+  const company = text(input.company);
+  if (company.length > 255) errors.company = ["The company must be at most 255 characters."];
+  else if (company) data.company = company;
+
+  // People type numbers with spaces or dashes; the backend wants plain E.164.
+  const phone = text(input.phone).replace(/[\s\-().]/g, "");
+  if (phone && !PHONE_PATTERN.test(phone)) errors.phone = ["Enter the number with its country code, for example +254712345678."];
+  else if (phone) data.phone = phone;
+
+  const service = text(input.service_interest);
+  if (service && !(SERVICE_INTERESTS as readonly string[]).includes(service)) errors.service_interest = ["Choose one of the listed services."];
+  else if (service) data.service_interest = service;
+
+  const budget = text(input.budget_range);
+  if (budget && !(BUDGET_RANGES as readonly string[]).includes(budget)) errors.budget_range = ["Choose one of the listed budgets."];
+  else if (budget) data.budget_range = budget;
+
   if (Object.keys(errors).length) {
     return json(422, { message: "Please check the highlighted fields.", errors });
   }
 
-  const base = process.env.LARAVEL_API_URL?.replace(/\/+$/, "");
-  if (!base) {
-    console.error("contact: LARAVEL_API_URL is not set");
+  const page = sourcePage(req, host);
+  if (page) data.source_page = page;
+
+  const base = process.env.CONTACT_API_URL?.replace(/\/+$/, "");
+  const key = process.env.CONTACT_API_KEY;
+  if (!base || !key) {
+    console.error("contact: CONTACT_API_URL and CONTACT_API_KEY must both be set");
     return unavailable();
   }
 
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
     Accept: "application/json",
+    "X-Api-Key": key,
   };
-  if (process.env.LARAVEL_API_TOKEN) headers.Authorization = `Bearer ${process.env.LARAVEL_API_TOKEN}`;
-  // Lets Laravel rate-limit per visitor rather than per server. Netlify
-  // puts the visitor's address in x-nf-client-connection-ip.
+  // The visitor's address and browser, so the backend rate-limits and records
+  // the visitor rather than this server. Netlify puts the address in
+  // x-nf-client-connection-ip.
   const ip =
     req.headers.get("x-nf-client-connection-ip") ?? req.headers.get("x-forwarded-for")?.split(",")[0].trim();
-  if (ip) headers["X-Forwarded-For"] = ip;
+  if (ip) headers["X-Client-Ip"] = ip;
+  const userAgent = req.headers.get("user-agent");
+  if (userAgent) headers["X-Client-User-Agent"] = userAgent.slice(0, 512);
 
   let upstream: Response;
   try {
-    upstream = await fetch(`${base}/contact`, {
+    upstream = await fetch(`${base}/contact-submissions`, {
       method: "POST",
       headers,
       body: JSON.stringify(data),
       signal: AbortSignal.timeout(UPSTREAM_TIMEOUT_MS),
     });
   } catch (error) {
-    console.error("contact: Laravel API unreachable", error);
+    console.error("contact: backend unreachable", error);
     return unavailable();
   }
 
   if (upstream.ok) return json(200, { message: "Thanks. Your message has been sent." });
 
   const body = (await upstream.json().catch(() => null)) as { message?: unknown; errors?: unknown } | null;
-  // Laravel's own validation errors are safe and useful to show.
+  // The backend's own validation errors are safe and useful to show.
   if (upstream.status === 422 && body && typeof body.message === "string") {
     return json(422, { message: body.message, errors: body.errors ?? {} });
   }
   if (upstream.status === 429) {
     return json(429, { message: "Too many messages in a short time. Please wait a minute and try again." });
   }
-  console.error(`contact: Laravel API responded ${upstream.status}`, body);
+  if (upstream.status === 401) {
+    console.error("contact: the backend rejected CONTACT_API_KEY (401)");
+    return unavailable();
+  }
+  console.error(`contact: backend responded ${upstream.status}`, body);
   return unavailable();
 }
-
