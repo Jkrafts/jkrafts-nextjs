@@ -35,11 +35,11 @@ export default defineConfig({
     command: 'npm run build && npm run start -- -p 3100',
     url: 'http://127.0.0.1:3100',
     reuseExistingServer: false,
-    // LARAVEL_API_URL: e2e/contact-function.spec.ts stands up a fake Laravel
-    // API there.
+    // CONTACT_API_URL / CONTACT_API_KEY: e2e/contact-function.spec.ts stands
+    // up a fake backend there and checks the key arrives.
     // CONTEXT=production builds what Netlify's production deploy builds
     // (indexable; see isIndexable in lib/seo), so e2e/seo.spec.ts can audit it.
-    env: { LARAVEL_API_URL: 'http://127.0.0.1:3199/api', CONTEXT: 'production' },
+    env: { CONTACT_API_URL: 'http://127.0.0.1:3199/api/v1', CONTACT_API_KEY: 'e2e-contact-key', CONTEXT: 'production' },
     timeout: 240_000,
   },
 });

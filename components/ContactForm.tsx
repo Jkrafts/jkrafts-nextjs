@@ -4,18 +4,23 @@ import { useEffect, useId, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { contact } from "@/lib/site";
 import { projects } from "@/data/projects";
+import { BUDGET_RANGES, PHONE_PATTERN, SERVICE_INTERESTS } from "@/lib/contactOptions";
 
 interface IFormInput {
   name: string;
   email: string;
+  company: string;
+  phone: string;
   subject: string;
+  service_interest: string;
+  budget_range: string;
   message: string;
   /** Honeypot: hidden from people, filled in by bots (see the function). */
-  company: string;
+  website_url: string;
 }
 
-type VisibleField = Exclude<keyof IFormInput, "company">;
-const VISIBLE_FIELDS: VisibleField[] = ["name", "email", "subject", "message"];
+type VisibleField = Exclude<keyof IFormInput, "website_url">;
+const VISIBLE_FIELDS: VisibleField[] = ["name", "email", "company", "phone", "subject", "service_interest", "budget_range", "message"];
 
 type Status = { kind: "idle" } | { kind: "sent" } | { kind: "error"; message: string };
 
@@ -137,6 +142,40 @@ const ContactForm = () => {
           />
           {fieldError("email")}
         </div>
+
+        <div>
+          <label htmlFor={`${id}-company`} className="field-label">
+            Company <span className="text-muted">(optional)</span>
+          </label>
+          <input
+            {...fieldProps("company")}
+            {...register("company", { maxLength: { value: 255, message: "Keep the company name under 255 characters." } })}
+            autoComplete="organization"
+            className="field"
+          />
+          {fieldError("company")}
+        </div>
+
+        <div>
+          <label htmlFor={`${id}-phone`} className="field-label">
+            Phone <span className="text-muted">(optional)</span>
+          </label>
+          <input
+            {...fieldProps("phone")}
+            {...register("phone", {
+              validate: (value) =>
+                !value.trim() ||
+                PHONE_PATTERN.test(value.replace(/[\s\-().]/g, "")) ||
+                "Enter the number with its country code, for example +254712345678.",
+            })}
+            type="tel"
+            autoComplete="tel"
+            inputMode="tel"
+            placeholder="+254 7…"
+            className="field"
+          />
+          {fieldError("phone")}
+        </div>
       </div>
 
       <div>
@@ -149,6 +188,38 @@ const ContactForm = () => {
           className="field"
         />
         {fieldError("subject")}
+      </div>
+
+      <div className="grid gap-6 sm:grid-cols-2">
+        <div>
+          <label htmlFor={`${id}-service_interest`} className="field-label">
+            What you need <span className="text-muted">(optional)</span>
+          </label>
+          <select {...fieldProps("service_interest")} {...register("service_interest")} className="field" defaultValue="">
+            <option value="">Choose one</option>
+            {SERVICE_INTERESTS.map((service) => (
+              <option key={service} value={service}>
+                {service}
+              </option>
+            ))}
+          </select>
+          {fieldError("service_interest")}
+        </div>
+
+        <div>
+          <label htmlFor={`${id}-budget_range`} className="field-label">
+            Budget <span className="text-muted">(optional)</span>
+          </label>
+          <select {...fieldProps("budget_range")} {...register("budget_range")} className="field" defaultValue="">
+            <option value="">Choose one</option>
+            {BUDGET_RANGES.map((budget) => (
+              <option key={budget} value={budget}>
+                {budget}
+              </option>
+            ))}
+          </select>
+          {fieldError("budget_range")}
+        </div>
       </div>
 
       <div>
@@ -168,8 +239,8 @@ const ContactForm = () => {
       {/* Honeypot. Off-screen rather than display:none (some bots skip
           hidden fields), and out of the tab order and accessibility tree. */}
       <div aria-hidden="true" className="absolute -left-[10000px] h-px w-px overflow-hidden">
-        <label htmlFor={`${id}-company`}>Company</label>
-        <input id={`${id}-company`} {...register("company")} tabIndex={-1} autoComplete="off" />
+        <label htmlFor={`${id}-website_url`}>Website</label>
+        <input id={`${id}-website_url`} {...register("website_url")} tabIndex={-1} autoComplete="off" />
       </div>
 
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
